@@ -1,0 +1,24 @@
+
+
+[DESIGN]
+# Maximum number of branch for function / method body
+max-branches=15
+
+[SPELLING]
+# Spelling dictionary name.
+spelling-dict=en_US
+
+# List of comma separated words that should not be checked.
+spelling-ignore-words=
+    atto, Avram,
+    exa, exbi,
+    femto,
+    gibi, giga,
+    kibi,
+    Lubkin,
+    mebi, milli, MPL,
+    nano,
+    pedi, peta, pragma, pico,
+    tebi, tera,
+    yobi, yocto, yotta,
+    zebi, zepto, zetta
