@@ -13,7 +13,7 @@ Numbers with support for formatting with SI and IEC prefixes
 
 import re
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 try:
     BASESTRING = basestring
@@ -146,7 +146,7 @@ class Float(float):
             value = float(self) / magnitude
             prefix = prefixes[magnitude]
 
-            if spec_type == 'J':
+            if spec_type == 'j':
                 prefix += 'i'
 
             if spec['width'] is not None:
