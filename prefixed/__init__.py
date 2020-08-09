@@ -143,7 +143,7 @@ class Float(float):
                 break
 
         if magnitude:
-            value = self / magnitude
+            value = float(self) / magnitude
             prefix = prefixes[magnitude]
 
             if spec_type == 'J':
@@ -155,11 +155,13 @@ class Float(float):
                     spec['width'] = str(width - len(prefix))
 
         else:
-            value = self
+            value = float(self)
             prefix = ''
 
         new_spec = ''.join(spec[key] for key in SPEC_FIELDS if spec[key] is not None)
-        if spec['precision'] is not None:
+        if spec['precision'] is None:
+            new_spec += 'f'
+        else:
             new_spec = '%s.%sf' % (new_spec, spec['precision'])
 
         return '%s%s' % (value.__format__(new_spec), prefix)
