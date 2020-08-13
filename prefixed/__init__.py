@@ -40,7 +40,7 @@ RE_FORMAT_SPEC = re.compile(
     # spec_type: Single non-numeric character
     r'(?P<type>\D)?$'
 )
-RE_PREFIX = re.compile(r'(?P<value>\d+\.?(?:\d+)?[eE]?(?:\d)?)(?P<prefix>[a-zA-Zμ]i?)\D*$')
+RE_PREFIX = re.compile(r'(?P<value>[-+]?\d+\.?(?:\d+)?[eE]?(?:\d)?)(?P<prefix>[a-zA-Zμ]i?)\D*$')
 
 SI_PREFIXES = {
     10**-24: 'y',  # Yocto
@@ -76,9 +76,9 @@ IEC_PREFIXES = {
 
 IEC_MAGNITUDE = {val: key for key, val in IEC_PREFIXES.items()}
 
-SI_NEG = range(-27, -3, 3)
-SI_POS = range(3, 27, 3)
-IEC_POS = range(10, 90, 10)
+SI_SMALL = range(-24, 0, 3)
+SI_LARGE = range(3, 27, 3)
+IEC_RANGE = range(10, 90, 10)
 
 SPEC_FIELDS = ('fill', 'align', 'sign', 'alt', 'zero', 'width', 'grouping')
 
@@ -128,16 +128,17 @@ class Float(float):
             return super(Float, self).__format__(format_spec)
 
         magnitude = 0
+        absolute_value = abs(self)
         if spec_type == 'h':
             base, prefixes = 10, SI_PREFIXES
-            span = SI_POS if self > 0 else SI_NEG
+            span = SI_LARGE if absolute_value > 1 else SI_SMALL
         else:
             base, prefixes = 2, IEC_PREFIXES
-            span = IEC_POS if self > 0 else tuple()
+            span = IEC_RANGE if absolute_value > 1 else tuple()
 
         for exp in span:
             next_mag = base**exp
-            if self > next_mag:
+            if absolute_value > next_mag:
                 magnitude = next_mag
             else:
                 break
