@@ -128,12 +128,12 @@ class Float(float):
             return super(Float, self).__format__(format_spec)
 
         magnitude = 0
-        absolute_value = abs(self)
+        absolute_value = abs(float(self))
         if spec_type == 'h':
             base, prefixes = 10, SI_PREFIXES
             if absolute_value >= 1000:
                 span = SI_LARGE
-            elif absolute_value <= .001:
+            elif absolute_value < 1:
                 span = SI_SMALL
             else:
                 span = tuple()
@@ -143,7 +143,8 @@ class Float(float):
 
         for exp in span:
             next_mag = base**exp
-            if absolute_value > next_mag:
+            # Need to divide here because it's a more accurate comparison for extreme numbers
+            if absolute_value / next_mag >= 1:
                 magnitude = next_mag
             else:
                 break
