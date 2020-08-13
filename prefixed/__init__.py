@@ -131,10 +131,15 @@ class Float(float):
         absolute_value = abs(self)
         if spec_type == 'h':
             base, prefixes = 10, SI_PREFIXES
-            span = SI_LARGE if absolute_value > 1 else SI_SMALL
+            if absolute_value >= 1000:
+                span = SI_LARGE
+            elif absolute_value <= .001:
+                span = SI_SMALL
+            else:
+                span = tuple()
         else:
             base, prefixes = 2, IEC_PREFIXES
-            span = IEC_RANGE if absolute_value > 1 else tuple()
+            span = IEC_RANGE if absolute_value >= 1024 else tuple()
 
         for exp in span:
             next_mag = base**exp
