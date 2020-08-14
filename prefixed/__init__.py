@@ -40,7 +40,7 @@ RE_FORMAT_SPEC = re.compile(
     # spec_type: Single non-numeric character
     r'(?P<type>\D)?$'
 )
-RE_PREFIX = re.compile(r'(?P<value>[-+]?\d+\.?(?:\d+)?[eE]?(?:\d)?)(?P<prefix>[a-zA-Zμ]i?)\D*$')
+RE_PREFIX = re.compile(r'(?P<value>[-+]?\d+\.?(?:\d+)?(?:[eE]?\d)?)(?P<prefix>[a-zA-Zμ]i?)\D*$')
 
 SI_PREFIXES = {
     10**-24: 'y',  # Yocto
