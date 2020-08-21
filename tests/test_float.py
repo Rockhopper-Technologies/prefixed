@@ -267,6 +267,38 @@ class TestFloatFormatting(unittest.TestCase):
             self.assertEqual(format(Float('+' + num), '.2j'), num)
             self.assertEqual(format(Float('+' + num), '.2J'), short_form)
 
+    def test_unicode(self):
+        """
+        For Python 2, test Unicode strings behave the same
+        """
+
+        for num in (u'1.00', u'11.00', u'101.00',
+                    u'1.01Ki', u'10.01Ki', u'100.01Ki',
+                    u'1.01Mi', u'10.01Mi', u'100.01Mi',
+                    u'1.01Gi', u'10.01Gi', u'100.01Gi',
+                    u'1.01Ti', u'10.01Ti', u'100.01Ti',
+                    u'1.01Pi', u'10.01Pi', u'100.01Pi',
+                    u'1.01Ei', u'10.01Ei', u'100.01Ei',
+                    u'1.01Zi', u'10.01Zi', u'100.01Zi',
+                    u'1.01Yi', u'10.01Yi', u'100.01Yi',
+                    u'0.00', u'10.00', u'100.00',
+                    u'1.00Ki', u'10.00Ki', u'100.00Ki',
+                    u'1.00Mi', u'10.00Mi', u'100.00Mi',
+                    u'1.00Gi', u'10.00Gi', u'100.00Gi',
+                    u'1.00Ti', u'10.00Ti', u'100.00Ti',
+                    u'1.00Pi', u'10.00Pi', u'100.00Pi',
+                    u'1.00Ei', u'10.00Ei', u'100.00Ei',
+                    u'1.00Zi', u'10.00Zi', u'100.00Zi',
+                    u'1.00Yi', u'10.00Yi', u'100.00Yi'):
+
+            short_form = num[:-1] if num[-1] == 'i' else num
+            self.assertEqual(format(Float(num), '.2j'), num)
+            self.assertEqual(format(Float(num), '.2J'), short_form)
+            self.assertEqual(format(Float('-' + num), '.2j'), '-' + num)
+            self.assertEqual(format(Float('-' + num), '.2J'), '-' + short_form)
+            self.assertEqual(format(Float('+' + num), '.2j'), num)
+            self.assertEqual(format(Float('+' + num), '.2J'), short_form)
+
     def test_invalid_prefix(self):
         """
         Invalid prefix provided
