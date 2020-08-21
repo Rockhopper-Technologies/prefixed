@@ -12,6 +12,8 @@ Numbers with support for formatting with SI and IEC prefixes
 
 
 import re
+import sys
+
 
 __version__ = '0.0.3'
 
@@ -83,6 +85,18 @@ IEC_RANGE = range(10, 90, 10)
 SPEC_FIELDS = ('fill', 'align', 'sign', 'alt', 'zero', 'width', 'grouping')
 
 
+def raise_from_none(exc):  # pragma: no cover
+    """
+    Convenience function to raise from None in a Python 2/3 compatible manner
+    """
+    raise exc
+
+
+if sys.version_info[0] >= 3:  # pragma: no branch
+    exec('def raise_from_none(exc):\n    raise exc from None')  # pylint: disable=exec-used
+
+
+# pylint: disable=super-with-arguments
 class Float(float):
     """
     Subclass of the built-in float class
@@ -98,6 +112,7 @@ class Float(float):
 
     def __new__(cls, value=0.0):
 
+        convert_value = value
         if isinstance(value, BASESTRING):
             match = RE_PREFIX.match(value)
             if match:
@@ -106,15 +121,29 @@ class Float(float):
                     magnitude = IEC_MAGNITUDE.get(prefix[0])
                 else:
                     magnitude = SI_MAGNITUDE.get(prefix)
-                if magnitude:
-                    return super(Float, cls).__new__(cls, float(match.group('value')) * magnitude)
 
-        return super(Float, cls).__new__(cls, value)
+                if magnitude:
+                    convert_value = float(match.group('value')) * magnitude
+
+        try:
+            return super(Float, cls).__new__(cls, convert_value)
+        except ValueError:
+            raise_from_none(
+                ValueError('Could not convert %s to Float: %r' % (value.__class__.__name__, value))
+            )
+        except TypeError:
+            raise_from_none(
+                TypeError("Can't convert %s to Float: %r" % (value.__class__.__name__, value))
+            )
 
     def __repr__(self):
 
         return 'Float(%s)' % super(Float, self).__repr__()
 
+    def __str__(self):
+        return str(float(self))
+
+    # pylint: disable=too-many-locals, too-many-branches
     def __format__(self, format_spec):
 
         match = RE_FORMAT_SPEC.match(format_spec)
@@ -182,7 +211,7 @@ class Float(float):
         except TypeError:
             return NotImplemented
 
-    def __div__(self, value):
+    def __div__(self, value):  # pragma: no cover
         """
         Old style division. Implemented to support Python 2.7
         """
@@ -233,7 +262,7 @@ class Float(float):
         except TypeError:
             return NotImplemented
 
-    def __rdiv__(self, value):
+    def __rdiv__(self, value):  # pragma: no cover
         """
         Old style division. Implemented to support Python 2.7
         """
