@@ -11,11 +11,11 @@ spelling-dict=en_US
 # List of comma separated words that should not be checked.
 spelling-ignore-words=
     atto, Avram,
-    CIS,
     exa, exbi,
     femto,
     gibi, giga,
-    kibi,
+    IEC,
+    ki, kibi,
     Lubkin,
     mebi, milli, MPL,
     nano,

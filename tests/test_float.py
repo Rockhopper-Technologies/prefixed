@@ -159,7 +159,7 @@ class TestFloatFormatting(unittest.TestCase):
 
     def test_output_iec_pos(self):
         """
-        Output for positive numbers in CIS format
+        Output for positive numbers in IEC format
         """
 
         self.assertEqual(format(Float(2), '.2j'), '2.00')
