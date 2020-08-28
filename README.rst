@@ -3,7 +3,7 @@
 Overview
 ========
 
-Prefixed provides an alternative implementation of the built-in :py:class:`float` which supports
+Prefixed provides an alternative implementation of the built-in float_ which supports
 formatted output with `SI (decimal)`_ and `IEC (binary)`_ prefixes.
 
 .. code-block:: python
@@ -20,16 +20,16 @@ formatted output with `SI (decimal)`_ and `IEC (binary)`_ prefixes.
   >>> f'{Float(2048):.2J}B'
   '2.00KB'
 
-Because :py:class:`prefixed.Float` inherits from the built-in :py:class:`float`, it behaves
+Because `prefixed.Float`_ inherits from the built-in float_, it behaves
 exactly the same in most cases.
 
 Key differences:
 
 - When a math operation is performed with another real number type
-  (:py:class:`float`, :py:class:`int`), the result will be a :py:class:`prefixed.Float` instance.
+  (float_, int_), the result will be a `prefixed.Float`_ instance.
 
 - Additional format types ``'h'``, ``'j'``, and ``'J'`` are supported for
-  f-strings and :py:func:`format`.
+  f-strings and `format()`_.
 
   +---------+----------------------------------------------------------+
   | Type    | Meaning                                                  |
@@ -46,13 +46,13 @@ Key differences:
 
 - When initializing from strings, SI and IEC prefixes are honored
 
-  .. code-block:: python
+.. code-block:: python
 
-      >>> Float('2k')
-      Float(2000.0)
+    >>> Float('2k')
+    Float(2000.0)
 
-      >>> Float('2Ki')
-      Float(2048.0)
+    >>> Float('2Ki')
+    Float(2048.0)
 
 Supported Prefixes
 ==================
@@ -121,6 +121,10 @@ IEC (Binary) Prefixes
 
 .. _SI (decimal): https://en.wikipedia.org/wiki/Metric_prefix
 .. _IEC (binary): https://en.wikipedia.org/wiki/Binary_prefix
+.. _float: https://docs.python.org/3/library/functions.html#float
+.. _int: https://docs.python.org/3/library/functions.html#int
+.. _prefixed.Float: https://prefixed.readthedocs.io/en/stable/api.html#prefixed.Float
+.. _format(): https://docs.python.org/3/library/functions.html#format
 
 .. |10^24| replace:: 10\ :sup:`24`\
 .. |10^21| replace:: 10\ :sup:`21`\

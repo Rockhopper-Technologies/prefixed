@@ -60,13 +60,13 @@ Key differences:
 
 - When initializing from strings, SI and IEC prefixes are honored
 
-  .. code-block:: python
+.. code-block:: python
 
-      >>> Float('2k')
-      Float(2000.0)
+    >>> Float('2k')
+    Float(2000.0)
 
-      >>> Float('2Ki')
-      Float(2048.0)
+    >>> Float('2Ki')
+    Float(2048.0)
 
 .. _SI (decimal): https://en.wikipedia.org/wiki/Metric_prefix
 .. _IEC (binary): https://en.wikipedia.org/wiki/Binary_prefix
