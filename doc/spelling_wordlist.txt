@@ -3,6 +3,7 @@ Atto
 Exa
 Exbi
 Femto
+Gi
 Gibi
 Giga
 ki
