@@ -1,3 +1,33 @@
+.. start-badges
+
+| |docs| |travis| |codecov|
+| |pypi| |supported-versions| |supported-implementations|
+
+.. |docs| image:: https://img.shields.io/readthedocs/prefixed.svg?style=plastic&logo=read-the-docs
+    :target: https://prefixed.readthedocs.org
+    :alt: Documentation Status
+
+.. |travis| image:: https://img.shields.io/travis/Rockhopper-Technologies/prefixed.svg?style=plastic&logo=travis
+    :target: https://travis-ci.org/Rockhopper-Technologies/prefixed
+    :alt: Travis-CI Build Status
+
+.. |codecov| image:: https://img.shields.io/codecov/c/github/Rockhopper-Technologies/prefixed.svg?style=plastic&logo=codecov
+    :target: https://codecov.io/gh/Rockhopper-Technologies/prefixed
+    :alt: Coverage Status
+
+.. |pypi| image:: https://img.shields.io/pypi/v/prefixed.svg?style=plastic&logo=pypi
+    :alt: PyPI Package latest release
+    :target: https://pypi.python.org/pypi/prefixed
+
+.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/prefixed.svg?style=plastic&logo=pypi
+    :alt: Supported versions
+    :target: https://pypi.python.org/pypi/prefixed
+
+.. |supported-implementations| image:: https://img.shields.io/pypi/implementation/prefixed.svg?style=plastic&logo=pypi
+    :alt: Supported implementations
+    :target: https://pypi.python.org/pypi/prefixed
+
+.. end-badges
 
 
 Overview

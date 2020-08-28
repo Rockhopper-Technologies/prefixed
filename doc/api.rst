@@ -5,7 +5,7 @@
   License, v. 2.0. If a copy of the MPL was not distributed with this
   file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-:github_url: https://github.com/Rockhopper-Technologies/enlighten
+:github_url: https://github.com/Rockhopper-Technologies/prefixed
 
 API Reference
 =============
