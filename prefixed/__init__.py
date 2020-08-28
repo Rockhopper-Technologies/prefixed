@@ -101,16 +101,41 @@ if sys.version_info[0] >= 3:  # pragma: no branch
 # pylint: disable=super-with-arguments
 class Float(float):
     """
-    Subclass of the built-in float class
+    Subclass of the built-in :py:class:`float` class
 
     Key differences:
-        - Format type 'h' will output with an SI prefix (ex: k for 1000)
-        - Format type 'j' will output with an IEC prefix (ex: Ki for 1024)
-        - Format type 'J' will output with an IEC prefix minus the i (ex: K for 1024)
-        - When initializing from strings, SI and IEC prefixes are honored
-            - SI Example: Float('3k')
-            - IEC Example: Float('3Ki')
-    """
+
+    - When a math operation is performed with another real number type
+      (:py:class:`float`, :py:class:`int`), the result will be a
+      :py:class:`prefixed.Float` instance.
+
+    - Additional format types ``'h'``, ``'j'``, and ``'J'`` are supported for
+      f-strings and :py:func:`format`.
+
+      +---------+----------------------------------------------------------+
+      | Type    | Meaning                                                  |
+      +=========+==========================================================+
+      | ``'h'`` | SI format. Outputs the number with closest divisible     |
+      |         | SI prefix. (k, M, G, ...)                                |
+      +---------+----------------------------------------------------------+
+      | ``'j'`` | IEC Format. Outputs the number with closest divisible    |
+      |         | IEC prefix. (Ki, Mi, Gi, ...)                            |
+      +---------+----------------------------------------------------------+
+      | ``'J'`` | Short IEC Format. Same as ``'j'`` but only a single      |
+      |         | character.   (K, M, G, ...)                              |
+      +---------+----------------------------------------------------------+
+
+    - When initializing from strings, SI and IEC prefixes are honored
+
+      .. code-block:: python
+
+        >>> Float('2k')
+        Float(2000.0)
+
+        >>> Float('2Ki')
+        Float(2048.0)
+
+"""
 
     def __new__(cls, value=0.0):
 

@@ -10,10 +10,7 @@
 API Reference
 =============
 
-Classes
--------
-
 .. py:module:: prefixed
 
-.. autoclass:: Float
+.. autoclass:: Float([x])
     :members:
