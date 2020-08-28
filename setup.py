@@ -25,6 +25,7 @@ setup(
     maintainer='Avram Lubkin',
     maintainer_email='avylove@rockhopper.net',
     url='https://github.com/Rockhopper-Technologies/prefixed',
+    project_urls={'Documentation': 'https://prefixed.readthedocs.io'},
     license='MPLv2.0',
     zip_safe=False,
     install_requires=[],
