@@ -12,6 +12,7 @@
 
    self
    prefixes.rst
+   format_spec.rst
    api.rst
 
 Overview
