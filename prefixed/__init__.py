@@ -39,6 +39,8 @@ RE_FORMAT_SPEC = re.compile(
     r'(?P<width>\d+)?'
     # grouping_option: ,_
     r'(?P<grouping>[,_])?'
+    # margin:
+    r'(?:%(?P<margin>-?\d+))?'
     # .precision: integer
     r'(?:\.(?P<precision>\d+))?'
     # spec_type: Single non-numeric character
@@ -111,7 +113,7 @@ class Float(float):
       (:py:class:`float`, :py:class:`int`), the result will be a
       :py:class:`prefixed.Float` instance.
 
-    - Additional format types ``'h'``, ``'j'``, and ``'J'`` are supported for
+    - Additional presentation types ``'h'``, ``'j'``, and ``'J'`` are supported for
       f-strings and :py:func:`format`.
 
       +---------+----------------------------------------------------------+
@@ -143,6 +145,23 @@ class Float(float):
 
         >>> f'{Float(3250):!.2h}'
         '3.25 k'
+
+    - An additional field, margin, can be specified which lowers or raises the threshold for
+      for each prefix by the given percentage.
+
+    .. code-block:: python
+
+        >>> f'{Float(950):.2h}'
+        '950.00'
+
+        >>> f'{Float(950):%-5.2h}'
+        '0.95k'
+
+        >>> f'{Float(1000):%5.2h}'
+        '1000.00'
+
+        >>> f'{Float(1050):%5.2h}'
+        1.05k'
 
 """
 
@@ -192,24 +211,20 @@ class Float(float):
         if spec_type is None or spec_type not in 'hjJ':
             return super(Float, self).__format__(format_spec)
 
-        magnitude = 0
         absolute_value = abs(float(self))
+        magnitude = 0
+        margin = 1.0 if spec['margin'] is None else (100 + int(spec['margin'])) / 100.0
         if spec_type == 'h':
             base, prefixes = 10, SI_PREFIXES
-            if absolute_value >= 1000:
-                span = SI_LARGE
-            elif absolute_value < 1:
-                span = SI_SMALL
-            else:
-                span = tuple()
+            span = SI_LARGE if absolute_value >= 1 else SI_SMALL
         else:
             base, prefixes = 2, IEC_PREFIXES
-            span = IEC_RANGE if absolute_value >= 1024 else tuple()
+            span = IEC_RANGE if absolute_value >= 1 else tuple()
 
         for exp in span:
             next_mag = base**exp
-            # Need to divide here because it's a more accurate comparison for extreme numbers
-            if absolute_value / next_mag >= 1:
+            # Use floor division rather than comparison for float variance
+            if absolute_value // (next_mag * margin):
                 magnitude = next_mag
             else:
                 break

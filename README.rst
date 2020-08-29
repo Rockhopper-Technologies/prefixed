@@ -58,7 +58,7 @@ Key differences:
 - When a math operation is performed with another real number type
   (float_, int_), the result will be a `prefixed.Float`_ instance.
 
-- Additional format types ``'h'``, ``'j'``, and ``'J'`` are supported for
+- Additional presentation types ``'h'``, ``'j'``, and ``'J'`` are supported for
   f-strings and `format()`_.
 
   +---------+----------------------------------------------------------+
@@ -90,6 +90,23 @@ Key differences:
 
   >>> f'{Float(3250):!.2h}'
   '3.25 k'
+
+- An additional field, margin, can be specified which lowers or raises the threshold for
+  for each prefix by the given percentage.
+
+.. code-block:: python
+
+    >>> f'{Float(950):.2h}'
+    '950.00'
+
+    >>> f'{Float(950):%-5.2h}'
+    '0.95k'
+
+    >>> f'{Float(1000):%5.2h}'
+    '1000.00'
+
+    >>> f'{Float(1050):%5.2h}'
+    1.05k'
 
 
 Supported Prefixes

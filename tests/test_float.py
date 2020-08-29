@@ -369,6 +369,20 @@ class TestFloatFormatting(unittest.TestCase):
         self.assertEqual(format(Float(3000), '!4.2h'), '3.00 k')
         self.assertEqual(format(Float(3000), '!.2h'), '3.00 k')
 
+    def test_margin(self):
+        """
+        Confirm variable margins
+        """
+
+        self.assertEqual(format(Float(950), '.2h'), '950.00')
+        self.assertEqual(format(Float(950), '%-5.2h'), '0.95k')
+        self.assertEqual(format(Float(1000), '%-5.2h'), '1.00k')
+        self.assertEqual(format(Float(949.9), '%-5.2h'), '949.90')
+
+        self.assertEqual(format(Float(1000), '%5.2h'), '1000.00')
+        self.assertEqual(format(Float(1049), '%5.2h'), '1049.00')
+        self.assertEqual(format(Float(1050), '%5.2h'), '1.05k')
+
 
 class TestFloatMath(unittest.TestCase):
     """

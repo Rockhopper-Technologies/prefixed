@@ -13,7 +13,8 @@ import unittest
 
 from prefixed import RE_FORMAT_SPEC
 
-FIELDS = ('fill', 'align', 'sign', 'alt', 'zero', 'width', 'grouping', 'precision', 'type')
+FIELDS = ('fill', 'align', 'sign', 'alt', 'zero', 'prefix_space',
+          'width', 'grouping', 'margin', 'precision', 'type')
 
 
 class FormatSpec(unittest.TestCase):
@@ -89,6 +90,18 @@ class FormatSpec(unittest.TestCase):
             spec = RE_FORMAT_SPEC.match(opt).groupdict()
             self.assertEqual(spec.pop('grouping'), opt)
             self.assertTrue(all(field is None for field in spec.values()))
+
+    def test_margin(self):
+        """
+        Test margin
+        """
+        spec = RE_FORMAT_SPEC.match('%4').groupdict()
+        self.assertEqual(spec.pop('margin'), '4')
+        self.assertTrue(all(field is None for field in spec.values()))
+
+        spec = RE_FORMAT_SPEC.match('%-4').groupdict()
+        self.assertEqual(spec.pop('margin'), '-4')
+        self.assertTrue(all(field is None for field in spec.values()))
 
     def test_precision(self):
         """
