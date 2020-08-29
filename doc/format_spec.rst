@@ -40,7 +40,10 @@ Prefixed-specific fields:
   |         | character.   (K, M, G, ...)                              |
   +---------+----------------------------------------------------------+
 
-copying static files... ... done| Add a single space between number and prefix             |
+  +---------+----------------------------------------------------------+
+  | Flag    | Meaning                                                  |
+  +=========+==========================================================+
+  | ``'!'`` | Add a single space between number and prefix             |
   +---------+----------------------------------------------------------+
 
   .. _Format Specification Mini-Language: https://docs.python.org/3/library/string.html#formatspec
