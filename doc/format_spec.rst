@@ -10,7 +10,7 @@
 Format Specification
 ====================
 
-.. code-block::
+.. code-block:: abnf
 
     format_spec     ::=  [[fill]align][sign][#][0][!][width][grouping_option][.precision][type]
     fill            ::=  <any character>
@@ -40,10 +40,7 @@ Prefixed-specific fields:
   |         | character.   (K, M, G, ...)                              |
   +---------+----------------------------------------------------------+
 
-  +---------+----------------------------------------------------------+
-  | Flag    | Meaning                                                  |
-  +=========+==========================================================+
-  | ``'!'`` | Add a single space between number and prefix             |
+copying static files... ... done| Add a single space between number and prefix             |
   +---------+----------------------------------------------------------+
 
   .. _Format Specification Mini-Language: https://docs.python.org/3/library/string.html#formatspec
