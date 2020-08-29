@@ -65,6 +65,14 @@ class FormatSpec(unittest.TestCase):
         self.assertEqual(spec.pop('zero'), '0')
         self.assertTrue(all(field is None for field in spec.values()))
 
+    def test_space_prefix(self):
+        """
+        Test space before prefix flag
+        """
+        spec = RE_FORMAT_SPEC.match('!').groupdict()
+        self.assertEqual(spec.pop('prefix_space'), '!')
+        self.assertTrue(all(field is None for field in spec.values()))
+
     def test_width(self):
         """
         Test width
@@ -95,7 +103,7 @@ class FormatSpec(unittest.TestCase):
         Test format type
         """
 
-        for item in ('f', 'h', 'k', '!', '%'):
+        for item in ('f', 'h', 'k', '?', '%'):
             spec = RE_FORMAT_SPEC.match(item).groupdict()
             self.assertEqual(spec.pop('type'), item)
             self.assertTrue(all(field is None for field in spec.values()))

@@ -360,6 +360,15 @@ class TestFloatFormatting(unittest.TestCase):
         self.assertEqual(format(Float(3000), '4.2h'), '3.00k')
         self.assertEqual(format(Float(3000), '00.2h'), '3.00k')
 
+    def test_exclamation(self):
+        """
+        Flag for space before prefix
+        """
+
+        self.assertEqual(format(Float(3000), '!7.2h'), ' 3.00 k')
+        self.assertEqual(format(Float(3000), '!4.2h'), '3.00 k')
+        self.assertEqual(format(Float(3000), '!.2h'), '3.00 k')
+
 
 class TestFloatMath(unittest.TestCase):
     """

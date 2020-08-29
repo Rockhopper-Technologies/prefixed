@@ -33,6 +33,8 @@ RE_FORMAT_SPEC = re.compile(
     r'(?P<alt>\#)?'
     # 0: same as 0=, Ignored if fill/align is given
     r'(?P<zero>0)?'
+    # !: Add space before prefix
+    r'(?P<prefix_space>!)?'
     # width: integer
     r'(?P<width>\d+)?'
     # grouping_option: ,_
@@ -135,6 +137,13 @@ class Float(float):
         >>> Float('2Ki')
         Float(2048.0)
 
+    - An additional format flag '!' is available which adds a space before the prefix
+
+    .. code-block:: python
+
+        >>> f'{Float(3250):!.2h}'
+        '3.25 k'
+
 """
 
     def __new__(cls, value=0.0):
@@ -207,10 +216,9 @@ class Float(float):
 
         if magnitude:
             value = float(self) / magnitude
-            prefix = prefixes[magnitude]
-
-            if spec_type == 'j':
-                prefix += 'i'
+            prefix = '%s%s%s' % ('' if spec['prefix_space'] is None else ' ',
+                                 prefixes[magnitude],
+                                 'i' if spec_type == 'j' else '')
 
             if spec['width'] is not None:
                 width = int(spec['width'])

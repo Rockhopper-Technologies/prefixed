@@ -68,5 +68,12 @@ Key differences:
     >>> Float('2Ki')
     Float(2048.0)
 
+- An additional format flag '!' is available which adds a space before the prefix
+
+.. code-block:: python
+
+  >>> f'{Float(3250):!.2h}'
+  '3.25 k'
+
 .. _SI (decimal): https://en.wikipedia.org/wiki/Metric_prefix
 .. _IEC (binary): https://en.wikipedia.org/wiki/Binary_prefix
