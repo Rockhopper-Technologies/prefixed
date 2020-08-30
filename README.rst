@@ -38,6 +38,8 @@ formatted output with `SI (decimal)`_ and `IEC (binary)`_ prefixes.
 
 .. code-block:: python
 
+  >>> from prefixed import Float
+
   >>> f'{Float(3250):.2h}'
   '3.25k'
 
