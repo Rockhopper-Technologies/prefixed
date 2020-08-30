@@ -78,6 +78,7 @@ Key differences:
 
 - An additional field, margin, can be specified which lowers or raises the threshold for
   for each prefix by the given percentage.
+  Margin is specified before precision with the syntax  ``%[-]digit+``.
 
 .. code-block:: python
 
