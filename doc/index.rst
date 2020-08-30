@@ -94,7 +94,7 @@ Key differences:
     '1000.00'
 
     >>> f'{Float(1050):%5.2h}'
-    1.05k'
+    '1.05k'
 
 .. _SI (decimal): https://en.wikipedia.org/wiki/Metric_prefix
 .. _IEC (binary): https://en.wikipedia.org/wiki/Binary_prefix

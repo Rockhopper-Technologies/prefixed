@@ -109,7 +109,7 @@ Key differences:
     '1000.00'
 
     >>> f'{Float(1050):%5.2h}'
-    1.05k'
+    '1.05k'
 
 
 Supported Prefixes
