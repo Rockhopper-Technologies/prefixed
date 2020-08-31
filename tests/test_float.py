@@ -322,6 +322,16 @@ class TestFloatFormatting(unittest.TestCase):
 
         self.assertEqual(format(Float('3kg'), '.2h'), '3.00k')
 
+    def test_space(self):
+        """
+        A single space between value and prefix is accepted
+        """
+
+        self.assertEqual(format(Float('3 k'), '.2h'), '3.00k')
+
+        with self.assertRaises(ValueError):
+            Float('100\tk')
+
     def test_invalid_format_spec(self):
         """
         Invalid format spec provided

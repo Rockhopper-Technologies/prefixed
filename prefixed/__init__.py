@@ -47,7 +47,7 @@ RE_FORMAT_SPEC = re.compile(
     r'(?P<type>\D)?$'
 )
 RE_PREFIX = re.compile(
-    r'(?P<value>[-+]?\d+\.?(?:\d+)?(?:[eE]?\d)?)(?P<prefix>(?:[a-zA-Z\u03bc]|\xce\xbc)i?)\D*$'
+    r'(?P<value>[-+]?\d+\.?(?:\d+)?(?:[eE]?\d)?) ?(?P<prefix>(?:[a-zA-Z\u03bc]|\xce\xbc)i?)\D*$'
 )
 
 SI_PREFIXES = {
