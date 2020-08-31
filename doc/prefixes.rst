@@ -89,11 +89,11 @@ IEC (Binary) Prefixes
 .. |10^-21| replace:: 10\ :sup:`-21`\
 .. |10^-24| replace:: 10\ :sup:`-24`\
 
-.. |2^80| replace:: 10\ :sup:`80`\
-.. |2^70| replace:: 10\ :sup:`70`\
-.. |2^60| replace:: 10\ :sup:`60`\
-.. |2^50| replace:: 10\ :sup:`50`\
-.. |2^40| replace:: 10\ :sup:`40`\
-.. |2^30| replace:: 10\ :sup:`30`\
-.. |2^20| replace:: 10\ :sup:`20`\
-.. |2^10| replace:: 10\ :sup:`10`\
+.. |2^80| replace:: 2\ :sup:`80`\
+.. |2^70| replace:: 2\ :sup:`70`\
+.. |2^60| replace:: 2\ :sup:`60`\
+.. |2^50| replace:: 2\ :sup:`50`\
+.. |2^40| replace:: 2\ :sup:`40`\
+.. |2^30| replace:: 2\ :sup:`30`\
+.. |2^20| replace:: 2\ :sup:`20`\
+.. |2^10| replace:: 2\ :sup:`10`\
