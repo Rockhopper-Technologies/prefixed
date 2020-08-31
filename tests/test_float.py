@@ -315,13 +315,6 @@ class TestFloatFormatting(unittest.TestCase):
         with self.assertRaises(TypeError):
             Float(3j)
 
-    def test_extra_characters(self):
-        """
-        Units provided
-        """
-
-        self.assertEqual(format(Float('3kg'), '.2h'), '3.00k')
-
     def test_space(self):
         """
         A single space between value and prefix is accepted
