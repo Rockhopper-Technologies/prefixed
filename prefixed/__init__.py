@@ -182,7 +182,7 @@ class Float(float):
                     convert_value = float(match.group('value')) * magnitude
 
         try:
-            return super(Float, cls).__new__(cls, convert_value)
+            new = super(Float, cls).__new__(cls, convert_value)
         except ValueError:
             raise_from_none(
                 ValueError('Could not convert %s to Float: %r' % (value.__class__.__name__, value))
@@ -191,6 +191,8 @@ class Float(float):
             raise_from_none(
                 TypeError("Can't convert %s to Float: %r" % (value.__class__.__name__, value))
             )
+
+        return new
 
     def __repr__(self):
 
