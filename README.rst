@@ -7,8 +7,8 @@
     :target: https://prefixed.readthedocs.org
     :alt: Documentation Status
 
-.. |travis| image:: https://img.shields.io/travis/Rockhopper-Technologies/prefixed.svg?style=plastic&logo=travis
-    :target: https://travis-ci.org/Rockhopper-Technologies/prefixed
+.. |travis| image:: https://img.shields.io/travis/com/Rockhopper-Technologies/prefixed.svg?style=plastic&logo=travis
+    :target: https://travis-ci.com/Rockhopper-Technologies/prefixed
     :alt: Travis-CI Build Status
 
 .. |codecov| image:: https://img.shields.io/codecov/c/github/Rockhopper-Technologies/prefixed.svg?style=plastic&logo=codecov
