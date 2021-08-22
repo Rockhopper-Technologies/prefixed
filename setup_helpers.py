@@ -8,6 +8,7 @@
 Functions to help with build and setup
 """
 
+import contextlib
 import io
 import os
 import re
@@ -87,14 +88,12 @@ def check_rst2html(path):
     Checks for warnings when doing ReST to HTML conversion
     """
 
-    # pylint: disable=import-error,import-outside-toplevel
-    from contextlib import redirect_stderr  # Import here because it breaks <= Python 3.4
-    from docutils.core import publish_file  # Import here because only available in doc tests
+    from docutils.core import publish_file  # pylint: disable=import-error,import-outside-toplevel
 
     stderr = io.StringIO()
 
     # This will exit with status if there is a bad enough error
-    with redirect_stderr(stderr):
+    with contextlib.redirect_stderr(stderr):
         output = publish_file(source_path=path, writer_name='html',
                               enable_exit_status=True, destination_path='/dev/null')
 
