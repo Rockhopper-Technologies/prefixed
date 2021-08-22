@@ -4,6 +4,10 @@
 # Maximum number of branch for function / method body
 max-branches=15
 
+[MESSAGES CONTROL]
+disable=
+    redundant-u-string-prefix,  # Python 2
+
 [SPELLING]
 # Spelling dictionary name.
 spelling-dict=en_US
