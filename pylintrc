@@ -6,6 +6,7 @@ max-branches=15
 
 [MESSAGES CONTROL]
 disable=
+    consider-using-f-string,  # Python 2
     redundant-u-string-prefix,  # Python 2
 
 [SPELLING]
