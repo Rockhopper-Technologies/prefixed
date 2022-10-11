@@ -230,8 +230,8 @@ class TestFloatFormatting(unittest.TestCase):
                     '1.00Y', '10.00Y', '100.00Y'):
 
             self.assertEqual(format(Float(num), '.2h'), num)
-            self.assertEqual(format(Float('-' + num), '.2h'), '-' + num)
-            self.assertEqual(format(Float('+' + num), '.2h'), num)
+            self.assertEqual(format(Float(f'-{num}'), '.2h'), f'-{num}')
+            self.assertEqual(format(Float(f'+{num}'), '.2h'), num)
 
     def test_input_output_si_small(self):
         """
@@ -256,8 +256,8 @@ class TestFloatFormatting(unittest.TestCase):
                     '100.01y', '10.01y', '1.01y'):
 
             self.assertEqual(format(Float(num), '.2h'), num)
-            self.assertEqual(format(Float('-' + num), '.2h'), '-' + num)
-            self.assertEqual(format(Float('+' + num), '.2h'), num)
+            self.assertEqual(format(Float(f'-{num}'), '.2h'), f'-{num}')
+            self.assertEqual(format(Float(f'+{num}'), '.2h'), num)
 
     def test_input_output_iec(self):
         """
@@ -286,10 +286,10 @@ class TestFloatFormatting(unittest.TestCase):
             short_form = num[:-1] if num[-1] == 'i' else num
             self.assertEqual(format(Float(num), '.2k'), num)
             self.assertEqual(format(Float(num), '.2m'), short_form)
-            self.assertEqual(format(Float('-' + num), '.2k'), '-' + num)
-            self.assertEqual(format(Float('-' + num), '.2m'), '-' + short_form)
-            self.assertEqual(format(Float('+' + num), '.2k'), num)
-            self.assertEqual(format(Float('+' + num), '.2m'), short_form)
+            self.assertEqual(format(Float(f'-{num}'), '.2k'), f'-{num}')
+            self.assertEqual(format(Float(f'-{num}'), '.2m'), f'-{short_form}')
+            self.assertEqual(format(Float(f'+{num}'), '.2k'), num)
+            self.assertEqual(format(Float(f'+{num}'), '.2m'), short_form)
 
     def test_unicode(self):
         """
@@ -318,10 +318,10 @@ class TestFloatFormatting(unittest.TestCase):
             short_form = num[:-1] if num[-1] == 'i' else num
             self.assertEqual(format(Float(num), '.2k'), num)
             self.assertEqual(format(Float(num), '.2m'), short_form)
-            self.assertEqual(format(Float('-' + num), '.2k'), '-' + num)
-            self.assertEqual(format(Float('-' + num), '.2m'), '-' + short_form)
-            self.assertEqual(format(Float('+' + num), '.2k'), num)
-            self.assertEqual(format(Float('+' + num), '.2m'), short_form)
+            self.assertEqual(format(Float(f'-{num}'), '.2k'), f'-{num}')
+            self.assertEqual(format(Float(f'-{num}'), '.2m'), f'-{short_form}')
+            self.assertEqual(format(Float(f'+{num}'), '.2k'), num)
+            self.assertEqual(format(Float(f'+{num}'), '.2m'), short_form)
 
     def test_invalid_prefix(self):
         """

@@ -187,8 +187,7 @@ class Float(float):
 
         convert_value = value
         if isinstance(value, BASESTRING):
-            match = RE_PREFIX.match(value)
-            if match:
+            if match := RE_PREFIX.match(value):
                 prefix = match.group('prefix')
                 if prefix[-1] == 'i':
                     magnitude = IEC_MAGNITUDE.get(prefix[0])
@@ -213,7 +212,7 @@ class Float(float):
 
     def __repr__(self):
 
-        return 'Float(%s)' % super(Float, self).__repr__()
+        return f'Float({super(Float, self).__repr__()})'
 
     def __str__(self):
         return str(float(self))
@@ -256,13 +255,11 @@ class Float(float):
 
         if magnitude:
             value = float(self) / magnitude
-            prefix = '%s%s%s' % ('' if spec['prefix_space'] is None else ' ',
-                                 prefixes[magnitude],
-                                 'i' if spec_type in 'kK' else '')
+            prefix = f"{'' if spec['prefix_space'] is None else ' '}{prefixes[magnitude]}{'i' if spec_type in 'kK' else ''}"
+
 
             if spec['width'] is not None:
-                width = int(spec['width'])
-                if width:
+                if width := int(spec['width']):
                     spec['width'] = str(width - len(prefix))
 
         else:
@@ -293,7 +290,7 @@ class Float(float):
         else:
             new_spec = '%s.%if' % (new_spec, precision)
 
-        return '%s%s' % (value.__format__(new_spec), prefix)
+        return f'{value.__format__(new_spec)}{prefix}'
 
     def __abs__(self):
         return self.__class__(super(Float, self).__abs__())
