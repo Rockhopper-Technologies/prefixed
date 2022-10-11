@@ -9,9 +9,6 @@ __pycache__
 .spyproject
 .vscode
 
-# Tools
-.sourcery.yaml
-
 # Tox
 .tox
 # Coverage
