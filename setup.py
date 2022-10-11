@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Copyright 2020 Avram Lubkin, All Rights Reserved
+# Copyright 2020 - 2022 Avram Lubkin, All Rights Reserved
 
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -29,7 +29,7 @@ setup(
     license='MPLv2.0',
     zip_safe=False,
     install_requires=[],
-    tests_require=[],
+    tests_require=['unittest2; python_version < "2.7"'],
     packages=find_packages(exclude=['tests', 'tests.*', 'examples']),
     test_suite='tests',
 

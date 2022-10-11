@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2020 Avram Lubkin, All Rights Reserved
+# Copyright 2020 - 2022 Avram Lubkin, All Rights Reserved
 
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,9 +9,14 @@
 Test file for prefixed.Float
 """
 
-import unittest
+import sys
 
 from prefixed import Float
+
+if sys.version_info[0] < 3:
+    import unittest2 as unittest
+else:
+    import unittest
 
 
 class TestFloat(unittest.TestCase):
@@ -40,146 +45,165 @@ class TestFloatFormatting(unittest.TestCase):
     Tests for prefixed.Float input and output
     """
 
-    # pylint: disable=too-many-statements
+    def test_output_zero(self):
+        """
+        Output when value is zero
+        """
+
+        zero = Float(0)
+        self.assertEqual(format(zero, '.2h'), '0.00')
+        self.assertEqual(format(zero, '.2H'), '0')
+        self.assertEqual(format(zero, '#.3H'), '0.00')
+        self.assertEqual(format(zero, '.2k'), '0.00')
+        self.assertEqual(format(zero, '.2m'), '0.00')
+        self.assertEqual(format(zero, '.2K'), '0')
+        self.assertEqual(format(zero, '.2M'), '0')
+        self.assertEqual(format(zero, '#.3K'), '0.00')
+        self.assertEqual(format(zero, '#.3M'), '0.00')
+
     def test_output_si_large_pos(self):
         """
         Output for large (>=1) positive numbers in SI format
         """
 
-        self.assertEqual(format(Float(1), '.2h'), '1.00')
-        self.assertEqual(format(Float(11), '.2h'), '11.00')
-        self.assertEqual(format(Float(101), '.2h'), '101.00')
-        self.assertEqual(format(Float(1010), '.2h'), '1.01k')
-        self.assertEqual(format(Float(10010), '.2h'), '10.01k')
-        self.assertEqual(format(Float(100010), '.2h'), '100.01k')
-        self.assertEqual(format(Float(1010000), '.2h'), '1.01M')
-        self.assertEqual(format(Float(10010000), '.2h'), '10.01M')
-        self.assertEqual(format(Float(100010000), '.2h'), '100.01M')
-        self.assertEqual(format(Float(1010000000), '.2h'), '1.01G')
-        self.assertEqual(format(Float(10010000000), '.2h'), '10.01G')
-        self.assertEqual(format(Float(100010000000), '.2h'), '100.01G')
-        self.assertEqual(format(Float(1010000000000), '.2h'), '1.01T')
-        self.assertEqual(format(Float(10010000000000), '.2h'), '10.01T')
-        self.assertEqual(format(Float(100010000000000), '.2h'), '100.01T')
-        self.assertEqual(format(Float(1010000000000000), '.2h'), '1.01P')
-        self.assertEqual(format(Float(10010000000000000), '.2h'), '10.01P')
-        self.assertEqual(format(Float(100010000000000000), '.2h'), '100.01P')
-        self.assertEqual(format(Float(1010000000000000000), '.2h'), '1.01E')
-        self.assertEqual(format(Float(10010000000000000000), '.2h'), '10.01E')
-        self.assertEqual(format(Float(100010000000000000000), '.2h'), '100.01E')
-        self.assertEqual(format(Float(1010000000000000000000), '.2h'), '1.01Z')
-        self.assertEqual(format(Float(10010000000000000000000), '.2h'), '10.01Z')
-        self.assertEqual(format(Float(100010000000000000000000), '.2h'), '100.01Z')
-        self.assertEqual(format(Float(1010000000000000000000000), '.2h'), '1.01Y')
-        self.assertEqual(format(Float(10010000000000000000000000), '.2h'), '10.01Y')
-        self.assertEqual(format(Float(100010000000000000000000000), '.2h'), '100.01Y')
+        tests = (
+            # (float, .2h, .2H, #.3H)
+            (1, '1.00', '1', '1.00'),
+            (11, '11.00', '11', '11.0'),
+            (101, '101.00', '100', '101'),
+            (1010, '1.01k', '1k', '1.01k'),
+            (10010, '10.01k', '10k', '10.0k'),
+            (100010, '100.01k', '100k', '100k'),
+            (1.01e6, '1.01M', '1M', '1.01M'),
+            (1.001e7, '10.01M', '10M', '10.0M'),
+            (1.0001e8, '100.01M', '100M', '100M'),
+            (1.01e9, '1.01G', '1G', '1.01G'),
+            (1.001e10, '10.01G', '10G', '10.0G'),
+            (1.0001e11, '100.01G', '100G', '100G'),
+            (1.01e12, '1.01T', '1T', '1.01T'),
+            (1.001e13, '10.01T', '10T', '10.0T'),
+            (1.0001e14, '100.01T', '100T', '100T'),
+            (1.01e15, '1.01P', '1P', '1.01P'),
+            (1.001e16, '10.01P', '10P', '10.0P'),
+            (1.0001e17, '100.01P', '100P', '100P'),
+            (1.01e18, '1.01E', '1E', '1.01E'),
+            (1.001e19, '10.01E', '10E', '10.0E'),
+            (1.0001e20, '100.01E', '100E', '100E'),
+            (1.01e21, '1.01Z', '1Z', '1.01Z'),
+            (1.001e22, '10.01Z', '10Z', '10.0Z'),
+            (1.0001e23, '100.01Z', '100Z', '100Z'),
+            (1.01e24, '1.01Y', '1Y', '1.01Y'),
+            (1.001e25, '10.01Y', '10Y', '10.0Y'),
+            (1.0001e26, '100.01Y', '100Y', '100Y'),
+            (1.01e27, '1010.00Y', '1000Y', '1010Y'),
+            (1.001e28, '10010.00Y', '10000Y', '10000Y'),
+            (1.0001e28, '10001.00Y', '10000Y', '10000Y'),
 
-        self.assertEqual(format(Float(0), '.2h'), '0.00')
-        self.assertEqual(format(Float(10), '.2h'), '10.00')
-        self.assertEqual(format(Float(100), '.2h'), '100.00')
-        self.assertEqual(format(Float(1000), '.2h'), '1.00k')
-        self.assertEqual(format(Float(10000), '.2h'), '10.00k')
-        self.assertEqual(format(Float(100000), '.2h'), '100.00k')
-        self.assertEqual(format(Float(1000000), '.2h'), '1.00M')
-        self.assertEqual(format(Float(10000000), '.2h'), '10.00M')
-        self.assertEqual(format(Float(100000000), '.2h'), '100.00M')
-        self.assertEqual(format(Float(1000000000), '.2h'), '1.00G')
-        self.assertEqual(format(Float(10000000000), '.2h'), '10.00G')
-        self.assertEqual(format(Float(100000000000), '.2h'), '100.00G')
-        self.assertEqual(format(Float(1000000000000), '.2h'), '1.00T')
-        self.assertEqual(format(Float(10000000000000), '.2h'), '10.00T')
-        self.assertEqual(format(Float(100000000000000), '.2h'), '100.00T')
-        self.assertEqual(format(Float(1000000000000000), '.2h'), '1.00P')
-        self.assertEqual(format(Float(10000000000000000), '.2h'), '10.00P')
-        self.assertEqual(format(Float(100000000000000000), '.2h'), '100.00P')
-        self.assertEqual(format(Float(1000000000000000000), '.2h'), '1.00E')
-        self.assertEqual(format(Float(10000000000000000000), '.2h'), '10.00E')
-        self.assertEqual(format(Float(100000000000000000000), '.2h'), '100.00E')
-        self.assertEqual(format(Float(1000000000000000000000), '.2h'), '1.00Z')
-        self.assertEqual(format(Float(10000000000000000000000), '.2h'), '10.00Z')
-        self.assertEqual(format(Float(100000000000000000000000), '.2h'), '100.00Z')
-        self.assertEqual(format(Float(1000000000000000000000000), '.2h'), '1.00Y')
-        self.assertEqual(format(Float(10000000000000000000000000), '.2h'), '10.00Y')
-        self.assertEqual(format(Float(100000000000000000000000000), '.2h'), '100.00Y')
+            (10, '10.00', '10', '10.0'),
+            (1e2, '100.00', '100', '100'),
+            (1e3, '1.00k', '1k', '1.00k'),
+            (1e4, '10.00k', '10k', '10.0k'),
+            (1e5, '100.00k', '100k', '100k'),
+            (1e6, '1.00M', '1M', '1.00M'),
+            (1e7, '10.00M', '10M', '10.0M'),
+            (1e8, '100.00M', '100M', '100M'),
+            (1e9, '1.00G', '1G', '1.00G'),
+            (1e10, '10.00G', '10G', '10.0G'),
+            (1e11, '100.00G', '100G', '100G'),
+            (1e12, '1.00T', '1T', '1.00T'),
+            (1e13, '10.00T', '10T', '10.0T'),
+            (1e14, '100.00T', '100T', '100T'),
+            (1e15, '1.00P', '1P', '1.00P'),
+            (1e16, '10.00P', '10P', '10.0P'),
+            (1e17, '100.00P', '100P', '100P'),
+            (1e18, '1.00E', '1E', '1.00E'),
+            (1e19, '10.00E', '10E', '10.0E'),
+            (1e20, '100.00E', '100E', '100E'),
+            (1e21, '1.00Z', '1Z', '1.00Z'),
+            (1e22, '10.00Z', '10Z', '10.0Z'),
+            (1e23, '100.00Z', '100Z', '100Z'),
+            (1e24, '1.00Y', '1Y', '1.00Y'),
+            (1e25, '10.00Y', '10Y', '10.0Y'),
+            (1e26, '100.00Y', '100Y', '100Y'),
+            (1e27, '1000.00Y', '1000Y', '1000Y'),
+            (1e28, '10000.00Y', '10000Y', '10000Y'),
+            (1e29, '100000.00Y', '100000Y', '100000Y'),
+        )
+
+        for test in tests:
+            with self.subTest(test=test):
+                self.assertEqual(format(Float(test[0]), '.2h'), test[1])
+                self.assertEqual(format(Float(test[0]), '.2H'), test[2])
+                self.assertEqual(format(Float(test[0]), '#.3H'), test[3])
 
     def test_output_si_small_pos(self):
         """
-        Output for large (<1) positive numbers in SI format
+        Output for small (<1) positive numbers in SI format
         """
 
-        self.assertEqual(format(Float(0.1), '.2h'), '100.00m')
-        self.assertEqual(format(Float(0.01), '.2h'), '10.00m')
-        self.assertEqual(format(Float(0.001), '.2h'), '1.00m')
-        self.assertEqual(format(Float(0.0001), '.2h'), '100.00μ')
-        self.assertEqual(format(Float(0.00001), '.2h'), '10.00μ')
-        self.assertEqual(format(Float(0.000001), '.2h'), '1.00μ')
-        self.assertEqual(format(Float(0.0000001), '.2h'), '100.00n')
-        self.assertEqual(format(Float(0.00000001), '.2h'), '10.00n')
-        self.assertEqual(format(Float(0.000000001), '.2h'), '1.00n')
-        self.assertEqual(format(Float(0.0000000001), '.2h'), '100.00p')
-        self.assertEqual(format(Float(0.00000000001), '.2h'), '10.00p')
-        self.assertEqual(format(Float(0.000000000001), '.2h'), '1.00p')
-        self.assertEqual(format(Float(0.0000000000001), '.2h'), '100.00f')
-        self.assertEqual(format(Float(0.00000000000001), '.2h'), '10.00f')
-        self.assertEqual(format(Float(0.000000000000001), '.2h'), '1.00f')
-        self.assertEqual(format(Float(0.0000000000000001), '.2h'), '100.00a')
-        self.assertEqual(format(Float(0.00000000000000001), '.2h'), '10.00a')
-        self.assertEqual(format(Float(0.000000000000000001), '.2h'), '1.00a')
-        self.assertEqual(format(Float(0.0000000000000000001), '.2h'), '100.00z')
-        self.assertEqual(format(Float(0.00000000000000000001), '.2h'), '10.00z')
-        self.assertEqual(format(Float(0.000000000000000000001), '.2h'), '1.00z')
-        self.assertEqual(format(Float(0.0000000000000000000001), '.2h'), '100.00y')
-        self.assertEqual(format(Float(0.00000000000000000000001), '.2h'), '10.00y')
-        self.assertEqual(format(Float(0.000000000000000000000001), '.2h'), '1.00y')
+        tests = (
+            # (float, .2h, .2H, #.3H)
+            (1e-1, '100.00m', '100m', '100m'),
+            (1e-2, '10.00m', '10m', '10.0m'),
+            (1e-3, '1.00m', '1m', '1.00m'),
+            (1e-4, '100.00μ', '100μ', '100μ'),
+            (1e-5, '10.00μ', '10μ', '10.0μ'),
+            (1e-6, '1.00μ', '1μ', '1.00μ'),
+            (1e-7, '100.00n', '100n', '100n'),
+            (1e-8, '10.00n', '10n', '10.0n'),
+            (1e-9, '1.00n', '1n', '1.00n'),
+            (1e-10, '100.00p', '100p', '100p'),
+            (1e-11, '10.00p', '10p', '10.0p'),
+            (1e-12, '1.00p', '1p', '1.00p'),
+            (1e-13, '100.00f', '100f', '100f'),
+            (1e-14, '10.00f', '10f', '10.0f'),
+            (1e-15, '1.00f', '1f', '1.00f'),
+            (1e-16, '100.00a', '100a', '100a'),
+            (1e-17, '10.00a', '10a', '10.0a'),
+            (1e-18, '1.00a', '1a', '1.00a'),
+            (1e-19, '100.00z', '100z', '100z'),
+            (1e-20, '10.00z', '10z', '10.0z'),
+            (1e-21, '1.00z', '1z', '1.00z'),
+            (1e-22, '100.00y', '100y', '100y'),
+            (1e-23, '10.00y', '10y', '10.0y'),
+            (1e-24, '1.00y', '1y', '1.00y'),
+            (1e-25, '0.10y', '0.1y', '0.100y'),
+            (1e-26, '0.01y', '0.01y', '0.0100y'),
+            (1e-27, '0.00y', '0.001y', '0.00100y'),
+        )
 
-        self.assertEqual(format(Float(0.10001), '.2h'), '100.01m')
-        self.assertEqual(format(Float(0.01001), '.2h'), '10.01m')
-        self.assertEqual(format(Float(0.00101), '.2h'), '1.01m')
-        self.assertEqual(format(Float(0.00010001), '.2h'), '100.01μ')
-        self.assertEqual(format(Float(0.00001001), '.2h'), '10.01μ')
-        self.assertEqual(format(Float(0.00000101), '.2h'), '1.01μ')
-        self.assertEqual(format(Float(0.00000010001), '.2h'), '100.01n')
-        self.assertEqual(format(Float(0.00000001001), '.2h'), '10.01n')
-        self.assertEqual(format(Float(0.00000000101), '.2h'), '1.01n')
-        self.assertEqual(format(Float(0.00000000010001), '.2h'), '100.01p')
-        self.assertEqual(format(Float(0.00000000001001), '.2h'), '10.01p')
-        self.assertEqual(format(Float(0.00000000000101), '.2h'), '1.01p')
-        self.assertEqual(format(Float(0.00000000000010001), '.2h'), '100.01f')
-        self.assertEqual(format(Float(0.00000000000001001), '.2h'), '10.01f')
-        self.assertEqual(format(Float(0.00000000000000101), '.2h'), '1.01f')
-        self.assertEqual(format(Float(0.00000000000000010001), '.2h'), '100.01a')
-        self.assertEqual(format(Float(0.00000000000000001001), '.2h'), '10.01a')
-        self.assertEqual(format(Float(0.00000000000000000101), '.2h'), '1.01a')
-        self.assertEqual(format(Float(0.00000000000000000010001), '.2h'), '100.01z')
-        self.assertEqual(format(Float(0.00000000000000000001001), '.2h'), '10.01z')
-        self.assertEqual(format(Float(0.00000000000000000000101), '.2h'), '1.01z')
-        self.assertEqual(format(Float(0.00000000000000000000010001), '.2h'), '100.01y')
-        self.assertEqual(format(Float(0.00000000000000000000001001), '.2h'), '10.01y')
-        self.assertEqual(format(Float(0.00000000000000000000000101), '.2h'), '1.01y')
+        for test in tests:
+            with self.subTest(test=test):
+                self.assertEqual(format(Float(test[0]), '.2h'), test[1])
+                self.assertEqual(format(Float(test[0]), '.2H'), test[2])
+                self.assertEqual(format(Float(test[0]), '#.3H'), test[3])
 
     def test_output_iec_pos(self):
         """
         Output for positive numbers in IEC format
         """
 
-        self.assertEqual(format(Float(2), '.2j'), '2.00')
-        self.assertEqual(format(Float(2), '.2J'), '2.00')
-        self.assertEqual(format(Float(2**10), '.2j'), '1.00Ki')
-        self.assertEqual(format(Float(2**10), '.2J'), '1.00K')
-        self.assertEqual(format(Float(2**20), '.2j'), '1.00Mi')
-        self.assertEqual(format(Float(2**20), '.2J'), '1.00M')
-        self.assertEqual(format(Float(2**30), '.2j'), '1.00Gi')
-        self.assertEqual(format(Float(2**30), '.2J'), '1.00G')
-        self.assertEqual(format(Float(2**40), '.2j'), '1.00Ti')
-        self.assertEqual(format(Float(2**40), '.2J'), '1.00T')
-        self.assertEqual(format(Float(2**50), '.2j'), '1.00Pi')
-        self.assertEqual(format(Float(2**50), '.2J'), '1.00P')
-        self.assertEqual(format(Float(2**60), '.2j'), '1.00Ei')
-        self.assertEqual(format(Float(2**60), '.2J'), '1.00E')
-        self.assertEqual(format(Float(2**70), '.2j'), '1.00Zi')
-        self.assertEqual(format(Float(2**70), '.2J'), '1.00Z')
-        self.assertEqual(format(Float(2**80), '.2j'), '1.00Yi')
-        self.assertEqual(format(Float(2**80), '.2J'), '1.00Y')
+        tests = (
+            # (float, .2k, .2m, .2K, .2M, #.3K, #.3M)
+            (2, '2.00', '2.00', '2', '2', '2.00', '2.00'),
+            (2**10, '1.00Ki', '1.00K', '1Ki', '1K', '1.00Ki', '1.00K'),
+            (2**20, '1.00Mi', '1.00M', '1Mi', '1M', '1.00Mi', '1.00M'),
+            (2**30, '1.00Gi', '1.00G', '1Gi', '1G', '1.00Gi', '1.00G'),
+            (2**40, '1.00Ti', '1.00T', '1Ti', '1T', '1.00Ti', '1.00T'),
+            (2**50, '1.00Pi', '1.00P', '1Pi', '1P', '1.00Pi', '1.00P'),
+            (2**60, '1.00Ei', '1.00E', '1Ei', '1E', '1.00Ei', '1.00E'),
+            (2**70, '1.00Zi', '1.00Z', '1Zi', '1Z', '1.00Zi', '1.00Z'),
+            (2**80, '1.00Yi', '1.00Y', '1Yi', '1Y', '1.00Yi', '1.00Y'),
+        )
+
+        for test in tests:
+            with self.subTest(test=test):
+                self.assertEqual(format(Float(test[0]), '.2k'), test[1])
+                self.assertEqual(format(Float(test[0]), '.2m'), test[2])
+                self.assertEqual(format(Float(test[0]), '.2K'), test[3])
+                self.assertEqual(format(Float(test[0]), '.2M'), test[4])
+                self.assertEqual(format(Float(test[0]), '#.3K'), test[5])
+                self.assertEqual(format(Float(test[0]), '#.3M'), test[6])
 
     def test_input_output_si_large(self):
         """
@@ -260,12 +284,12 @@ class TestFloatFormatting(unittest.TestCase):
                     '1.00Yi', '10.00Yi', '100.00Yi'):
 
             short_form = num[:-1] if num[-1] == 'i' else num
-            self.assertEqual(format(Float(num), '.2j'), num)
-            self.assertEqual(format(Float(num), '.2J'), short_form)
-            self.assertEqual(format(Float('-' + num), '.2j'), '-' + num)
-            self.assertEqual(format(Float('-' + num), '.2J'), '-' + short_form)
-            self.assertEqual(format(Float('+' + num), '.2j'), num)
-            self.assertEqual(format(Float('+' + num), '.2J'), short_form)
+            self.assertEqual(format(Float(num), '.2k'), num)
+            self.assertEqual(format(Float(num), '.2m'), short_form)
+            self.assertEqual(format(Float('-' + num), '.2k'), '-' + num)
+            self.assertEqual(format(Float('-' + num), '.2m'), '-' + short_form)
+            self.assertEqual(format(Float('+' + num), '.2k'), num)
+            self.assertEqual(format(Float('+' + num), '.2m'), short_form)
 
     def test_unicode(self):
         """
@@ -292,12 +316,12 @@ class TestFloatFormatting(unittest.TestCase):
                     u'1.00Yi', u'10.00Yi', u'100.00Yi'):
 
             short_form = num[:-1] if num[-1] == 'i' else num
-            self.assertEqual(format(Float(num), '.2j'), num)
-            self.assertEqual(format(Float(num), '.2J'), short_form)
-            self.assertEqual(format(Float('-' + num), '.2j'), '-' + num)
-            self.assertEqual(format(Float('-' + num), '.2J'), '-' + short_form)
-            self.assertEqual(format(Float('+' + num), '.2j'), num)
-            self.assertEqual(format(Float('+' + num), '.2J'), short_form)
+            self.assertEqual(format(Float(num), '.2k'), num)
+            self.assertEqual(format(Float(num), '.2m'), short_form)
+            self.assertEqual(format(Float('-' + num), '.2k'), '-' + num)
+            self.assertEqual(format(Float('-' + num), '.2m'), '-' + short_form)
+            self.assertEqual(format(Float('+' + num), '.2k'), num)
+            self.assertEqual(format(Float('+' + num), '.2m'), short_form)
 
     def test_invalid_prefix(self):
         """
@@ -353,6 +377,14 @@ class TestFloatFormatting(unittest.TestCase):
         """
 
         self.assertEqual(format(Float(3000), 'h'), '%fk' % 3.0)
+        self.assertEqual(format(Float(3001), 'H'), '3.001k')
+        self.assertEqual(format(Float(3001), '#H'), '3.00100k')
+        self.assertEqual(format(Float(4147.2), 'k'), '%fKi' % 4.05)
+        self.assertEqual(format(Float(4147.2), 'm'), '%fK' % 4.05)
+        self.assertEqual(format(Float(4147.2), 'K'), '4.05Ki')
+        self.assertEqual(format(Float(4147.2), 'M'), '4.05K')
+        self.assertEqual(format(Float(4147.2), '#K'), '4.05000Ki')
+        self.assertEqual(format(Float(4147.2), '#M'), '4.05000K')
 
     def test_width(self):
         """

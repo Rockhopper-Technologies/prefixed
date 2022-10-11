@@ -1,5 +1,5 @@
 ..
-  Copyright 2017 - 2020 Avram Lubkin, All Rights Reserved
+  Copyright 2017 - 2022 Avram Lubkin, All Rights Reserved
 
   This Source Code Form is subject to the terms of the Mozilla Public
   License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@ Format Specification
     width           ::=  digit+
     grouping_option ::=  "_" | ","
     precision       ::=  digit+
-    type            ::=  "e" | "E" | "f" | "F" | "g" | "G" | "h" | "j" | "J" | "n" | "%"
+    type            ::=  "e" | "E" | "f" | "F" | "g" | "G" | "h" | "H" | "k" | "K" | "m" | "M" | "n" | "%"
 
 
 Prefixed-specific fields are defined below. Descriptions of standard fields can be found in
@@ -58,18 +58,30 @@ Margin specifies the percentage to raise or lower these thresholds.
 Presentation Types
 ------------------
 
-+---------+----------------------------------------------------------+
-| Type    | Meaning                                                  |
-+=========+==========================================================+
-| ``'h'`` | SI format. Outputs the number with closest divisible     |
-|         | SI prefix. (k, M, G, ...)                                |
-+---------+----------------------------------------------------------+
-| ``'j'`` | IEC Format. Outputs the number with closest divisible    |
-|         | IEC prefix. (Ki, Mi, Gi, ...)                            |
-+---------+----------------------------------------------------------+
-| ``'J'`` | Short IEC Format. Same as ``'j'`` but only a single      |
-|         | character.   (K, M, G, ...)                              |
-+---------+----------------------------------------------------------+
+      +---------+-------------------------------------------------------------------+
+      | Type    | Meaning                                                           |
+      +=========+===================================================================+
+      | ``'h'`` | SI format. Outputs the number with closest divisible SI prefix.   |
+      |         | (k, M, G, ...)                                                    |
+      +---------+-------------------------------------------------------------------+
+      | ``'H'`` | Same as ``'h'`` with precision indicating significant digits.     |
+      +---------+-------------------------------------------------------------------+
+      | ``'k'`` | IEC Format. Outputs the number with closest divisible IEC prefix. |
+      |         | (Ki, Mi, Gi, ...)                                                 |
+      +---------+-------------------------------------------------------------------+
+      | ``'K'`` | Same as ``'k'`` with precision indicating significant digits.     |
+      +---------+-------------------------------------------------------------------+
+      | ``'m'`` | Short IEC Format. Same as ``'k'`` but only a single character.    |
+      |         | (K, M, G, ...)                                                    |
+      +---------+-------------------------------------------------------------------+
+      | ``'M'`` | Same as ``'m'`` with precision indicating significant digits.     |
+      +---------+-------------------------------------------------------------------+
+      |         |                                                                   |
+      +---------+-------------------------------------------------------------------+
+      | ``'j'`` | Alias for ``'k'`` - DEPRECATED                                    |
+      +---------+-------------------------------------------------------------------+
+      | ``'J'`` | Alias for ``'m'`` - DEPRECATED                                    |
+      +---------+-------------------------------------------------------------------+
 
 
   .. _Format Specification Mini-Language: https://docs.python.org/3/library/string.html#formatspec
