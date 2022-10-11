@@ -27,3 +27,6 @@ notes
 
 # Spec
 *.spec
+
+# Specialist
+.specialist
