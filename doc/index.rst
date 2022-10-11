@@ -1,5 +1,5 @@
 ..
-  Copyright 2020 Avram Lubkin, All Rights Reserved
+  Copyright 2020 - 2022 Avram Lubkin, All Rights Reserved
 
   This Source Code Form is subject to the terms of the Mozilla Public
   License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -31,10 +31,10 @@ formatted output with `SI (decimal)`_ and `IEC (binary)`_ prefixes.
   >>> '{:.2h}s'.format(Float(.00001534))
   '15.34μs'
 
-  >>> '{:.2j}B'.format(Float(42467328))
+  >>> '{:.2k}B'.format(Float(42467328))
   '40.50MiB'
 
-  >>> f'{Float(2048):.2J}B'
+  >>> f'{Float(2048):.2m}B'
   '2.00KB'
 
 Because :py:class:`prefixed.Float` inherits from the built-in :py:class:`float`, it behaves
@@ -45,21 +45,33 @@ Key differences:
 - When a math operation is performed with another real number type
   (:py:class:`float`, :py:class:`int`), the result will be a :py:class:`prefixed.Float` instance.
 
-- Additional presentation types ``'h'``, ``'j'``, and ``'J'`` are supported for
-  f-strings and :py:func:`format`.
+- Additional presentation types ``'h'``, ``'H'``, ``'k'``, ``'K'``,
+  ``'m'``, and ``'M'`` are supported for f-strings and :py:func:`format`.
 
-  +---------+----------------------------------------------------------+
-  | Type    | Meaning                                                  |
-  +=========+==========================================================+
-  | ``'h'`` | SI format. Outputs the number with closest divisible     |
-  |         | SI prefix. (k, M, G, ...)                                |
-  +---------+----------------------------------------------------------+
-  | ``'j'`` | IEC Format. Outputs the number with closest divisible    |
-  |         | IEC prefix. (Ki, Mi, Gi, ...)                            |
-  +---------+----------------------------------------------------------+
-  | ``'J'`` | Short IEC Format. Same as ``'j'`` but only a single      |
-  |         | character.   (K, M, G, ...)                              |
-  +---------+----------------------------------------------------------+
+  +---------+-------------------------------------------------------------------+
+  | Type    | Meaning                                                           |
+  +=========+===================================================================+
+  | ``'h'`` | SI format. Outputs the number with closest divisible SI prefix.   |
+  |         | (k, M, G, ...)                                                    |
+  +---------+-------------------------------------------------------------------+
+  | ``'H'`` | Same as ``'h'`` with precision indicating significant digits.     |
+  +---------+-------------------------------------------------------------------+
+  | ``'k'`` | IEC Format. Outputs the number with closest divisible IEC prefix. |
+  |         | (Ki, Mi, Gi, ...)                                                 |
+  +---------+-------------------------------------------------------------------+
+  | ``'K'`` | Same as ``'k'`` with precision indicating significant digits.     |
+  +---------+-------------------------------------------------------------------+
+  | ``'m'`` | Short IEC Format. Same as ``'k'`` but only a single character.    |
+  |         | (K, M, G, ...)                                                    |
+  +---------+-------------------------------------------------------------------+
+  | ``'M'`` | Same as ``'m'`` with precision indicating significant digits.     |
+  +---------+-------------------------------------------------------------------+
+  |         |                                                                   |
+  +---------+-------------------------------------------------------------------+
+  | ``'j'`` | Alias for ``'k'`` - DEPRECATED                                    |
+  +---------+-------------------------------------------------------------------+
+  | ``'J'`` | Alias for ``'m'`` - DEPRECATED                                    |
+  +---------+-------------------------------------------------------------------+
 
 - When initializing from strings, SI and IEC prefixes are honored
 

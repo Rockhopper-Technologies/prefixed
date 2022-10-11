@@ -46,10 +46,10 @@ formatted output with `SI (decimal)`_ and `IEC (binary)`_ prefixes.
   >>> '{:.2h}s'.format(Float(.00001534))
   '15.34μs'
 
-  >>> '{:.2j}B'.format(Float(42467328))
+  >>> '{:.2k}B'.format(Float(42467328))
   '40.50MiB'
 
-  >>> f'{Float(2048):.2J}B'
+  >>> f'{Float(2048):.2m}B'
   '2.00KB'
 
 Because `prefixed.Float`_ inherits from the built-in float_, it behaves
@@ -60,21 +60,34 @@ Key differences:
 - When a math operation is performed with another real number type
   (float_, int_), the result will be a `prefixed.Float`_ instance.
 
-- Additional presentation types ``'h'``, ``'j'``, and ``'J'`` are supported for
-  f-strings and `format()`_.
+- Additional presentation types ``'h'``, ``'H'``, ``'k'``, ``'K'``,
+  ``'m'``, and ``'M'`` are supported for f-strings and `format()`_.
 
-  +---------+----------------------------------------------------------+
-  | Type    | Meaning                                                  |
-  +=========+==========================================================+
-  | ``'h'`` | SI format. Outputs the number with closest divisible     |
-  |         | SI prefix. (k, M, G, ...)                                |
-  +---------+----------------------------------------------------------+
-  | ``'j'`` | IEC Format. Outputs the number with closest divisible    |
-  |         | IEC prefix. (Ki, Mi, Gi, ...)                            |
-  +---------+----------------------------------------------------------+
-  | ``'J'`` | Short IEC Format. Same as ``'j'`` but only a single      |
-  |         | character.   (K, M, G, ...)                              |
-  +---------+----------------------------------------------------------+
+  +---------+-------------------------------------------------------------------+
+  | Type    | Meaning                                                           |
+  +=========+===================================================================+
+  | ``'h'`` | SI format. Outputs the number with closest divisible SI prefix.   |
+  |         | (k, M, G, ...)                                                    |
+  +---------+-------------------------------------------------------------------+
+  | ``'H'`` | Same as ``'h'`` with precision indicating significant digits.     |
+  +---------+-------------------------------------------------------------------+
+  | ``'k'`` | IEC Format. Outputs the number with closest divisible IEC prefix. |
+  |         | (Ki, Mi, Gi, ...)                                                 |
+  +---------+-------------------------------------------------------------------+
+  | ``'K'`` | Same as ``'k'`` with precision indicating significant digits.     |
+  +---------+-------------------------------------------------------------------+
+  | ``'m'`` | Short IEC Format. Same as ``'k'`` but only a single character.    |
+  |         | (K, M, G, ...)                                                    |
+  +---------+-------------------------------------------------------------------+
+  | ``'M'`` | Same as ``'m'`` with precision indicating significant digits.     |
+  +---------+-------------------------------------------------------------------+
+  |         |                                                                   |
+  +---------+-------------------------------------------------------------------+
+  | ``'j'`` | Alias for ``'k'`` - DEPRECATED                                    |
+  +---------+-------------------------------------------------------------------+
+  | ``'J'`` | Alias for ``'m'`` - DEPRECATED                                    |
+  +---------+-------------------------------------------------------------------+
+
 
 - When initializing from strings, SI and IEC prefixes are honored
 
