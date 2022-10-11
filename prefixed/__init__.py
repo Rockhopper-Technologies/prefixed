@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2020 Avram Lubkin, All Rights Reserved
+# Copyright 2020 - 2022 Avram Lubkin, All Rights Reserved
 
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,9 +11,9 @@ Numbers with support for formatting with SI and IEC prefixes
 """
 
 
+from math import floor, log10
 import re
 import sys
-
 
 __version__ = '0.3.2'
 
@@ -100,6 +100,11 @@ def raise_from_none(exc):  # pragma: no cover
 
 if sys.version_info[0] >= 3:  # pragma: no branch
     exec('def raise_from_none(exc):\n    raise exc from None')  # pylint: disable=exec-used
+    maketrans = str.maketrans
+else:
+    from string import maketrans  # pragma: no cover
+
+TRANS_DEPRECATED = maketrans('jJ', 'km')
 
 
 # pylint: disable=super-with-arguments
@@ -113,21 +118,33 @@ class Float(float):
       (:py:class:`float`, :py:class:`int`), the result will be a
       :py:class:`prefixed.Float` instance.
 
-    - Additional presentation types ``'h'``, ``'j'``, and ``'J'`` are supported for
-      f-strings and :py:func:`format`.
+    - Additional presentation types ``'h'``, ``'H'``, ``'k'``, ``'K'``,
+    ``'m'``, and ``'M'`` are supported for f-strings and :py:func:`format`.
 
-      +---------+----------------------------------------------------------+
-      | Type    | Meaning                                                  |
-      +=========+==========================================================+
-      | ``'h'`` | SI format. Outputs the number with closest divisible     |
-      |         | SI prefix. (k, M, G, ...)                                |
-      +---------+----------------------------------------------------------+
-      | ``'j'`` | IEC Format. Outputs the number with closest divisible    |
-      |         | IEC prefix. (Ki, Mi, Gi, ...)                            |
-      +---------+----------------------------------------------------------+
-      | ``'J'`` | Short IEC Format. Same as ``'j'`` but only a single      |
-      |         | character.   (K, M, G, ...)                              |
-      +---------+----------------------------------------------------------+
+      +---------+-------------------------------------------------------------------+
+      | Type    | Meaning                                                           |
+      +=========+===================================================================+
+      | ``'h'`` | SI format. Outputs the number with closest divisible SI prefix.   |
+      |         | (k, M, G, ...)                                                    |
+      +---------+-------------------------------------------------------------------+
+      | ``'H'`` | Same as ``'h'`` with precision indicating significant digits.     |
+      +---------+-------------------------------------------------------------------+
+      | ``'k'`` | IEC Format. Outputs the number with closest divisible IEC prefix. |
+      |         | (Ki, Mi, Gi, ...)                                                 |
+      +---------+-------------------------------------------------------------------+
+      | ``'K'`` | Same as ``'k'`` with precision indicating significant digits.     |
+      +---------+-------------------------------------------------------------------+
+      | ``'m'`` | Short IEC Format. Same as ``'k'`` but only a single character.    |
+      |         | (K, M, G, ...)                                                    |
+      +---------+-------------------------------------------------------------------+
+      | ``'M'`` | Same as ``'m'`` with precision indicating significant digits.     |
+      +---------+-------------------------------------------------------------------+
+      |         |                                                                   |
+      +---------+-------------------------------------------------------------------+
+      | ``'j'`` | Alias for ``'k'`` - DEPRECATED                                    |
+      +---------+-------------------------------------------------------------------+
+      | ``'J'`` | Alias for ``'m'`` - DEPRECATED                                    |
+      +---------+-------------------------------------------------------------------+
 
     - When initializing from strings, SI and IEC prefixes are honored
 
@@ -209,34 +226,39 @@ class Float(float):
             raise ValueError('Invalid format specifier')
 
         spec = match.groupdict()
-        spec_type = spec['type']
 
-        if spec_type is None or spec_type not in 'hjJ':
+        if spec['type'] not in {'h', 'H', 'k', 'K', 'm', 'M'}:
             return super(Float, self).__format__(format_spec)
+
+        # Handle deprecated spec types
+        spec_type = spec['type'].translate(TRANS_DEPRECATED)
 
         absolute_value = abs(float(self))
         magnitude = 0
-        margin = 1.0 if spec['margin'] is None else (100 + int(spec['margin'])) / 100.0
-        if spec_type == 'h':
+        margin = 1.0 if spec['margin'] is None else (100.0 + float(spec['margin'])) / 100.0
+        if spec_type in 'hH':
             base, prefixes = 10, SI_PREFIXES
-            span = SI_LARGE if absolute_value >= 1 else SI_SMALL
+            span = SI_LARGE if absolute_value >= 1.0 else SI_SMALL
         else:
             base, prefixes = 2, IEC_PREFIXES
-            span = IEC_RANGE if absolute_value >= 1 else tuple()
+            span = IEC_RANGE if absolute_value >= 1.0 else tuple()
 
-        for exp in span:
-            next_mag = base**exp
-            # Use floor division rather than comparison for float variance
-            if absolute_value // (next_mag * margin):
-                magnitude = next_mag
-            else:
-                break
+        if span is SI_SMALL and 0 < absolute_value < 10 ** -24 * margin:
+            magnitude = 10 ** -24
+        else:
+            for exp in span:
+                next_mag = base**exp
+                # Use floor division rather than comparison for float variance
+                if absolute_value // (next_mag * margin):
+                    magnitude = next_mag
+                else:
+                    break
 
         if magnitude:
             value = float(self) / magnitude
             prefix = '%s%s%s' % ('' if spec['prefix_space'] is None else ' ',
                                  prefixes[magnitude],
-                                 'i' if spec_type == 'j' else '')
+                                 'i' if spec_type in 'kK' else '')
 
             if spec['width'] is not None:
                 width = int(spec['width'])
@@ -247,11 +269,29 @@ class Float(float):
             value = float(self)
             prefix = ''
 
+        precision = int(spec['precision']) if spec['precision'] else None
+
+        # Adjust precision for significant digits
+        if spec_type in 'HKM':
+            precision = precision or 6
+            int_digits = 1 if value == 0.0 else floor(log10(abs(value))) + 1
+            # In Python 2.7, floor sometimes returns a float, so ad coercion
+            value = round(value, int(precision - int_digits))
+            precision = max(0, precision - int_digits)
+
+            if precision and not spec['alt']:
+                preformat = value.__format__('.%df' % precision)
+                precision -= (len(preformat) - len(preformat.rstrip('0')))
+
+            # Remove trailing decimal when no decimal places are occupied
+            elif spec['alt']:
+                spec['alt'] = None
+
         new_spec = ''.join(spec[key] for key in SPEC_FIELDS if spec[key] is not None)
-        if spec['precision'] is None:
+        if precision is None:
             new_spec += 'f'
         else:
-            new_spec = '%s.%sf' % (new_spec, spec['precision'])
+            new_spec = '%s.%if' % (new_spec, precision)
 
         return '%s%s' % (value.__format__(new_spec), prefix)
 
