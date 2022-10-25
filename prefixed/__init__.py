@@ -107,6 +107,53 @@ else:
 TRANS_DEPRECATED = maketrans('jJ', 'km')
 
 
+def _convert(value, spec):
+    """
+    Convert value to value, prefix pair based on format spec
+    value, prefix, and spec are returned
+    spec may be modified to account for prefix length
+    """
+
+    absolute_value = abs(value)
+
+    if spec['type'] in 'hH':
+        base, prefixes = 10, SI_PREFIXES
+        span = SI_LARGE if absolute_value >= 1.0 else SI_SMALL
+    else:
+        base, prefixes = 2, IEC_PREFIXES
+        span = IEC_RANGE if absolute_value >= 1.0 else tuple()
+
+    margin = 1.0 if spec['margin'] is None else (100.0 + float(spec['margin'])) / 100.0
+
+    if span is SI_SMALL and 0 < absolute_value < 10 ** -24 * margin:
+        magnitude = 10 ** -24
+    else:
+        magnitude = 0
+        for exp in span:
+            next_mag = base**exp
+            # Use floor division rather than comparison for float variance
+            if absolute_value // (next_mag * margin):
+                magnitude = next_mag
+            else:
+                break
+
+    if magnitude:
+        value /= magnitude
+        prefix = '%s%s%s' % ('' if spec['prefix_space'] is None else ' ',
+                             prefixes[magnitude],
+                             'i' if spec['type'] in 'kK' else '')
+
+        if spec['width'] is not None:
+            width = int(spec['width'])
+            if width:
+                spec['width'] = str(width - len(prefix))
+
+    else:
+        prefix = ''
+
+    return value, prefix, spec
+
+
 # pylint: disable=super-with-arguments
 class Float(float):
     """
@@ -218,61 +265,29 @@ class Float(float):
     def __str__(self):
         return str(float(self))
 
-    # pylint: disable=too-many-locals, too-many-branches
     def __format__(self, format_spec):
 
+        # Parse format spec
         match = RE_FORMAT_SPEC.match(format_spec)
         if match is None:
             raise ValueError('Invalid format specifier')
 
         spec = match.groupdict()
 
+        # If not a spec we handle, use float.__format__(()
         if spec['type'] not in {'h', 'H', 'k', 'K', 'm', 'M'}:
             return super(Float, self).__format__(format_spec)
 
         # Handle deprecated spec types
-        spec_type = spec['type'].translate(TRANS_DEPRECATED)
+        spec['type'] = spec['type'].translate(TRANS_DEPRECATED)
 
-        absolute_value = abs(float(self))
-        magnitude = 0
-        margin = 1.0 if spec['margin'] is None else (100.0 + float(spec['margin'])) / 100.0
-        if spec_type in 'hH':
-            base, prefixes = 10, SI_PREFIXES
-            span = SI_LARGE if absolute_value >= 1.0 else SI_SMALL
-        else:
-            base, prefixes = 2, IEC_PREFIXES
-            span = IEC_RANGE if absolute_value >= 1.0 else tuple()
-
-        if span is SI_SMALL and 0 < absolute_value < 10 ** -24 * margin:
-            magnitude = 10 ** -24
-        else:
-            for exp in span:
-                next_mag = base**exp
-                # Use floor division rather than comparison for float variance
-                if absolute_value // (next_mag * margin):
-                    magnitude = next_mag
-                else:
-                    break
-
-        if magnitude:
-            value = float(self) / magnitude
-            prefix = '%s%s%s' % ('' if spec['prefix_space'] is None else ' ',
-                                 prefixes[magnitude],
-                                 'i' if spec_type in 'kK' else '')
-
-            if spec['width'] is not None:
-                width = int(spec['width'])
-                if width:
-                    spec['width'] = str(width - len(prefix))
-
-        else:
-            value = float(self)
-            prefix = ''
+        # Determine value and prefix
+        value, prefix, spec = _convert(float(self), spec)
 
         precision = int(spec['precision']) if spec['precision'] else None
 
         # Adjust precision for significant digits
-        if spec_type in 'HKM':
+        if spec['type'] in 'HKM':
             precision = precision or 6
             int_digits = 1 if value == 0.0 else floor(log10(abs(value))) + 1
             # In Python 2.7, floor sometimes returns a float, so ad coercion
@@ -287,12 +302,14 @@ class Float(float):
             elif spec['alt']:
                 spec['alt'] = None
 
+        # Compose new format spec
         new_spec = ''.join(spec[key] for key in SPEC_FIELDS if spec[key] is not None)
         if precision is None:
             new_spec += 'f'
         else:
             new_spec = '%s.%if' % (new_spec, precision)
 
+        # Format with new format spec
         return '%s%s' % (value.__format__(new_spec), prefix)
 
     def __abs__(self):
