@@ -18,7 +18,7 @@ from setup_helpers import get_version  # noqa: E402
 # -- Project information -----------------------------------------------------
 
 project = 'Prefixed'
-copyright = '2020, Avram Lubkin'
+copyright = '2022, Avram Lubkin'
 author = 'Avram Lubkin'
 
 # The full version, including alpha/beta/rc tags
@@ -38,7 +38,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.intersphinx',
               'sphinx.ext.napoleon']
 
-if not os.environ.get('READTHEDOCS') == 'True':
+if os.environ.get('READTHEDOCS') != 'True':
     extensions.append('sphinxcontrib.spelling')
 
 # Add any paths that contain templates here, relative to this directory.

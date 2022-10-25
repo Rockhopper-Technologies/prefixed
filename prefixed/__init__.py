@@ -166,7 +166,7 @@ class Float(float):
       :py:class:`prefixed.Float` instance.
 
     - Additional presentation types ``'h'``, ``'H'``, ``'k'``, ``'K'``,
-    ``'m'``, and ``'M'`` are supported for f-strings and :py:func:`format`.
+      ``'m'``, and ``'M'`` are supported for f-strings and :py:func:`format`.
 
       +---------+-------------------------------------------------------------------+
       | Type    | Meaning                                                           |
@@ -205,16 +205,41 @@ class Float(float):
 
     - An additional format flag '!' is available which adds a space before the prefix
 
-    .. code-block:: python
+      .. code-block:: python
 
         >>> f'{Float(3250):!.2h}'
         '3.25 k'
+
+    - When the ``'H'``, ``'K``, or ``'M'`` presentation types are used, precision is treated as
+      the number of significant digits to include. Standard rounding will occur for the final digit.
+
+      .. code-block:: python
+
+        >>> f'{Float(1246):.3h}'
+        '1.246k'
+
+        >>> f'{Float(1246):.3H}'
+        '1.25k'
+
+      By default, trailing zeros are removed.
+
+      .. code-block:: python
+
+        >>> f'{Float(1000):.3H}'
+        '1k'
+
+      To preserve trailing zeros, include the ``'#'`` flag.
+
+      .. code-block:: python
+
+        >>> f'{Float(1000):#.3H}'
+        '1.00k'
 
     - An additional field, margin, can be specified which lowers or raises the threshold for
       for each prefix by the given percentage.
       Margin is specified before precision with the syntax  ``%[-]digit+``.
 
-    .. code-block:: python
+      .. code-block:: python
 
         >>> f'{Float(950):.2h}'
         '950.00'
