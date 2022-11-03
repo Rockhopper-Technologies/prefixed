@@ -426,6 +426,10 @@ class TestFloatFormatting(unittest.TestCase):
         self.assertEqual(format(Float(2048), '.2j'), '2.00Ki')
         self.assertEqual(format(Float(2048), '.2J'), '2.00K')
 
+        # Unicode for Python 2
+        self.assertEqual(format(Float(2048), u'.2j'), '2.00Ki')
+        self.assertEqual(format(Float(2048), u'.2J'), '2.00K')
+
 
 class TestFloatMath(unittest.TestCase):
     """

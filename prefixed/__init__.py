@@ -15,7 +15,7 @@ from math import floor, log10
 import re
 import sys
 
-__version__ = '0.4.1'
+__version__ = '0.4.2'
 
 try:
     BASESTRING = basestring
@@ -100,12 +100,8 @@ def raise_from_none(exc):  # pragma: no cover
 
 if sys.version_info[0] >= 3:  # pragma: no branch
     exec('def raise_from_none(exc):\n    raise exc from None')  # pylint: disable=exec-used
-    maketrans = str.maketrans
-else:
-    from string import maketrans  # pragma: no cover
 
-DEPRECATED = {'j', 'J'}
-TRANS_DEPRECATED = maketrans('jJ', 'km')
+DEPRECATED = {'j': 'k', 'J': 'm'}
 
 
 def _convert(value, spec):
@@ -302,7 +298,7 @@ class Float(float):
 
         # Handle deprecated spec types
         if spec['type'] in DEPRECATED:
-            spec['type'] = spec['type'].translate(TRANS_DEPRECATED)
+            spec['type'] = DEPRECATED[spec['type']]
 
         # If not a spec we handle, use float.__format__(()
         if spec['type'] not in {'h', 'H', 'k', 'K', 'm', 'M'}:
