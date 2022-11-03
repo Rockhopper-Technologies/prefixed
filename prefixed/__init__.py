@@ -15,7 +15,7 @@ from math import floor, log10
 import re
 import sys
 
-__version__ = '0.4.0'
+__version__ = '0.4.1'
 
 try:
     BASESTRING = basestring
@@ -104,6 +104,7 @@ if sys.version_info[0] >= 3:  # pragma: no branch
 else:
     from string import maketrans  # pragma: no cover
 
+DEPRECATED = {'j', 'J'}
 TRANS_DEPRECATED = maketrans('jJ', 'km')
 
 
@@ -299,12 +300,13 @@ class Float(float):
 
         spec = match.groupdict()
 
+        # Handle deprecated spec types
+        if spec['type'] in DEPRECATED:
+            spec['type'] = spec['type'].translate(TRANS_DEPRECATED)
+
         # If not a spec we handle, use float.__format__(()
         if spec['type'] not in {'h', 'H', 'k', 'K', 'm', 'M'}:
             return super(Float, self).__format__(format_spec)
-
-        # Handle deprecated spec types
-        spec['type'] = spec['type'].translate(TRANS_DEPRECATED)
 
         # Determine value and prefix
         value, prefix, spec = _convert(float(self), spec)

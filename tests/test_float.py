@@ -418,6 +418,14 @@ class TestFloatFormatting(unittest.TestCase):
         self.assertEqual(format(Float(1049), '%5.2h'), '1049.00')
         self.assertEqual(format(Float(1050), '%5.2h'), '1.05k')
 
+    def test_deprecated(self):
+        """
+        Confirm deprecated format specifiers function
+        """
+
+        self.assertEqual(format(Float(2048), '.2j'), '2.00Ki')
+        self.assertEqual(format(Float(2048), '.2J'), '2.00K')
+
 
 class TestFloatMath(unittest.TestCase):
     """
