@@ -51,6 +51,8 @@ RE_PREFIX = re.compile(
 )
 
 SI_PREFIXES = {
+    10**-30: 'q',  # Quecto
+    10**-27: 'r',  # Ronto
     10**-24: 'y',  # Yocto
     10**-21: 'z',  # Zepto
     10**-18: 'a',  # Atto
@@ -67,7 +69,10 @@ SI_PREFIXES = {
     10**18: 'E',  # Exa
     10**21: 'Z',  # Zetta
     10**24: 'Y',  # Yotta
+    10**27: 'R',  # Ronna
+    10**30: 'Q',  # Quetta
 }
+SI_SMALLEST = 10 ** -30
 
 SI_MAGNITUDE = {val: key for key, val in SI_PREFIXES.items()}
 
@@ -84,8 +89,8 @@ IEC_PREFIXES = {
 
 IEC_MAGNITUDE = {val: key for key, val in IEC_PREFIXES.items()}
 
-SI_SMALL = range(-24, 0, 3)
-SI_LARGE = range(3, 27, 3)
+SI_SMALL = range(-30, 0, 3)
+SI_LARGE = range(3, 33, 3)
 IEC_RANGE = range(10, 90, 10)
 
 SPEC_FIELDS = ('fill', 'align', 'sign', 'alt', 'zero', 'width', 'grouping')
@@ -122,8 +127,8 @@ def _convert(value, spec):
 
     margin = 1.0 if spec['margin'] is None else (100.0 + float(spec['margin'])) / 100.0
 
-    if span is SI_SMALL and 0 < absolute_value < 10 ** -24 * margin:
-        magnitude = 10 ** -24
+    if span is SI_SMALL and 0 < absolute_value < SI_SMALLEST * margin:
+        magnitude = SI_SMALLEST
     else:
         magnitude = 0
         for exp in span:
