@@ -122,11 +122,12 @@ def check_copyrights():
     )
     for entry in process.stdout.splitlines():
         filename = entry[3:].strip()
+        diff_cmd = ['git', 'diff', filename]
+        if entry[0].strip():
+            diff_cmd.insert(-1, '--cached')
 
         # Get changes for file
-        process = subprocess.run(
-            ('git', 'diff', '-U0', filename), stdout=subprocess.PIPE, check=True, text=True
-        )
+        process = subprocess.run(diff_cmd, stdout=subprocess.PIPE, check=True, text=True)
 
         # Find files with changes that aren't only for copyright
         for line in process.stdout.splitlines():
