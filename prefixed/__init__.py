@@ -312,9 +312,15 @@ class Float(float):
         # Adjust precision for significant digits
         if spec['type'] in 'HKM':
             precision = precision or 6
-            int_digits = 1 if value == 0.0 else floor(log10(abs(value))) + 1
-            # In Python 2.7, floor sometimes returns a float, so ad coercion
-            value = round(value, int(precision - int_digits))
+
+            # Try to avoid floating point variance by limiting trailing decimals
+            if value >= 1:
+                value = round(value, precision + 1)
+
+            # In Python 2.7, floor sometimes returns a float, so coerce with int
+            int_digits = 1 if value == 0.0 else int(floor(log10(abs(value)))) + 1
+
+            value = round(value, precision - int_digits)
             precision = max(0, precision - int_digits)
 
             if precision and not spec['alt']:
