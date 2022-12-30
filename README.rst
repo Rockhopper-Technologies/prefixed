@@ -7,7 +7,7 @@
     :target: https://prefixed.readthedocs.org
     :alt: Documentation Status
 
-.. |gh_actions| image:: https://img.shields.io/github/workflow/status/Rockhopper-Technologies/prefixed/Tests?event=push&logo=github-actions&style=plastic
+.. |gh_actions| image:: https://img.shields.io/github/actions/workflow/status/Rockhopper-Technologies/prefixed/tests.yml?event=push&logo=github-actions&style=plastic
     :target: https://github.com/Rockhopper-Technologies/prefixed/actions/workflows/tests.yml
     :alt: GitHub Actions Status
 
