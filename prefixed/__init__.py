@@ -151,7 +151,7 @@ def _convert(value, spec):
                 spec['width'] = str(width - len(prefix))
 
     else:
-        prefix = ''
+        prefix = '' if spec['prefix_space'] is None else ' '
 
     return value, prefix, spec
 

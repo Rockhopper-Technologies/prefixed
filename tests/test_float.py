@@ -426,6 +426,9 @@ class TestFloatFormatting(unittest.TestCase):
         Flag for space before prefix
         """
 
+        self.assertEqual(format(Float(500), '!7.2h'), ' 500.00 ')
+        self.assertEqual(format(Float(500), '!4.2h'), '500.00 ')
+        self.assertEqual(format(Float(500), '!.2h'), '500.00 ')
         self.assertEqual(format(Float(3000), '!7.2h'), ' 3.00 k')
         self.assertEqual(format(Float(3000), '!4.2h'), '3.00 k')
         self.assertEqual(format(Float(3000), '!.2h'), '3.00 k')
