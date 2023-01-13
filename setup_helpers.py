@@ -166,11 +166,12 @@ def check_copyrights():
         modified = None
 
         # Get the year in the copyright line
-        match = re.match(r'([^:]+):.*(20\d\d)', entry)
+        filename, text = entry.split(':', 1)
+        match = re.match(r'.*(20\d\d)', text)
         if match:
-            filename, year = match.groups()
+            year = match.group(1)
 
-            # If files is in current changes, use this year
+            # If file is in current changes, use this year
             if filename in changed_now:
                 modified = this_year
 
@@ -208,7 +209,7 @@ def check_copyrights():
             # Compare modified date to copyright year
             if modified and modified != year:
                 rtn = 1
-                print('%s [%s]' % (entry, modified))
+                print('%s: %s [%s]' % (filename, text, modified))
 
     return rtn
 
