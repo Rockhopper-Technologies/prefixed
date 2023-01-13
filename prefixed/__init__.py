@@ -34,7 +34,7 @@ RE_FORMAT_SPEC = re.compile(
     # 0: same as 0=, Ignored if fill/align is given
     r'(?P<zero>0)?'
     # !: Add space before prefix
-    r'(?P<prefix_space>!)?'
+    r'(?P<prefix_space>!!?)?'
     # width: integer
     r'(?P<width>\d+)?'
     # grouping_option: ,_
@@ -151,7 +151,7 @@ def _convert(value, spec):
                 spec['width'] = str(width - len(prefix))
 
     else:
-        prefix = '' if spec['prefix_space'] is None else ' '
+        prefix = ' ' if spec['prefix_space'] == '!' else ''
 
     return value, prefix, spec
 

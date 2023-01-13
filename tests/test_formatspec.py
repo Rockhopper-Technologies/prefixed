@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2020 Avram Lubkin, All Rights Reserved
+# Copyright 2020 - 2023 Avram Lubkin, All Rights Reserved
 
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -70,9 +70,11 @@ class FormatSpec(unittest.TestCase):
         """
         Test space before prefix flag
         """
-        spec = RE_FORMAT_SPEC.match('!').groupdict()
-        self.assertEqual(spec.pop('prefix_space'), '!')
-        self.assertTrue(all(field is None for field in spec.values()))
+
+        for example in ('!', '!!'):
+            spec = RE_FORMAT_SPEC.match(example).groupdict()
+            self.assertEqual(spec.pop('prefix_space'), example)
+            self.assertTrue(all(field is None for field in spec.values()))
 
     def test_width(self):
         """

@@ -1,5 +1,5 @@
 ..
-  Copyright 2017 - 2022 Avram Lubkin, All Rights Reserved
+  Copyright 2017 - 2023 Avram Lubkin, All Rights Reserved
 
   This Source Code Form is subject to the terms of the Mozilla Public
   License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -12,7 +12,7 @@ Format Specification
 
 .. code-block:: abnf
 
-    format_spec     ::=  [[fill]align][sign][#][0][!][width][grouping_option][%[-]margin][.precision][type]
+    format_spec     ::=  [[fill]align][sign][#][0][![!]][width][grouping_option][%[-]margin][.precision][type]
     fill            ::=  <any character>
     align           ::=  "<" | ">" | "=" | "^"
     sign            ::=  "+" | "-" | " "
@@ -31,10 +31,12 @@ Prefixed-specific fields
 Flags
 -----
 
-+---------+----------------------------------------------------------+
-| Flag    | Meaning                                                  |
-+=========+==========================================================+
-| ``'!'`` | Add a single space between number and prefix             |
++----------+----------------------------------------------------------+
+| Flag     | Meaning                                                  |
++==========+==========================================================+
+| ``'!'``  | Add a single space between number and prefix             |
++----------+----------------------------------------------------------+
+| ``'!!'`` | Same as ``'!'``, but drop space if there is no prefix    |
 +---------+----------------------------------------------------------+
 
 Margin
