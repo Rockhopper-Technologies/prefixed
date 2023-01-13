@@ -1,4 +1,4 @@
-# Copyright 2017 - 2022 Avram Lubkin, All Rights Reserved
+# Copyright 2017 - 2023 Avram Lubkin, All Rights Reserved
 
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -129,7 +129,7 @@ def _get_changed_files():
         # Construct diff command
         filename = entry[3:].strip()
         diff_cmd = ['git', 'diff', filename]
-        if entry[1].strip():
+        if entry[0].strip():
             diff_cmd.insert(-1, '--cached')
 
         # Find files with changes that aren't only for copyright
