@@ -68,6 +68,9 @@ def print_all_spelling_errors(path):
     """
 
     rtn = 0
+    if not os.path.isdir(path):
+        return rtn
+
     for filename in os.listdir(path):
         if print_spelling_errors(os.path.join(path, filename)):
             rtn = 1
