@@ -15,7 +15,7 @@ from math import floor, log10
 import re
 import sys
 
-__version__ = '0.5.0'
+__version__ = '0.6.0'
 
 try:
     BASESTRING = basestring
