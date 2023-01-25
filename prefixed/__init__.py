@@ -10,7 +10,7 @@
 Numbers with support for formatting with SI and IEC prefixes
 """
 
-
+import itertools
 from math import floor, log10
 import re
 import sys
@@ -50,31 +50,34 @@ RE_PREFIX = re.compile(
     r'(?P<value>[-+]?\d+\.?(?:\d+)?(?:[eE]?\d)?) ?(?P<prefix>(?:[a-zA-Z\u03bc]|\xce\xbc)i?)$'
 )
 
-SI_PREFIXES = {
-    10**-30: 'q',  # Quecto
-    10**-27: 'r',  # Ronto
-    10**-24: 'y',  # Yocto
-    10**-21: 'z',  # Zepto
-    10**-18: 'a',  # Atto
-    10**-15: 'f',  # Femto
-    10**-12: 'p',  # Pico
-    10**-9: 'n',  # Nano
-    10**-6: 'μ',  # Micro
-    10**-3: 'm',  # Milli
-    10**3: 'k',  # Kilo
-    10**6: 'M',  # Mega
-    10**9: 'G',  # Giga
-    10**12: 'T',  # Tera
-    10**15: 'P',  # Peta
-    10**18: 'E',  # Exa
-    10**21: 'Z',  # Zetta
-    10**24: 'Y',  # Yotta
-    10**27: 'R',  # Ronna
-    10**30: 'Q',  # Quetta
+SI_SMALL = {
+    1e-30: 'q',  # Quecto
+    1e-27: 'r',  # Ronto
+    1e-24: 'y',  # Yocto
+    1e-21: 'z',  # Zepto
+    1e-18: 'a',  # Atto
+    1e-15: 'f',  # Femto
+    1e-12: 'p',  # Pico
+    1e-9: 'n',  # Nano
+    1e-6: 'μ',  # Micro
+    1e-3: 'm',  # Milli
 }
-SI_SMALLEST = 10 ** -30
+SI_LARGE = {
+    1e3: 'k',  # Kilo
+    1e6: 'M',  # Mega
+    1e9: 'G',  # Giga
+    1e12: 'T',  # Tera
+    1e15: 'P',  # Peta
+    1e18: 'E',  # Exa
+    1e21: 'Z',  # Zetta
+    1e24: 'Y',  # Yotta
+    1e27: 'R',  # Ronna
+    1e30: 'Q',  # Quetta
+}
 
-SI_MAGNITUDE = {val: key for key, val in SI_PREFIXES.items()}
+SI_SMALLEST = 1e-30
+
+SI_MAGNITUDE = {val: key for key, val in itertools.chain(SI_SMALL.items(), SI_LARGE.items())}
 
 IEC_PREFIXES = {
     2**10: 'K',  # Kibi
@@ -89,11 +92,14 @@ IEC_PREFIXES = {
 
 IEC_MAGNITUDE = {val: key for key, val in IEC_PREFIXES.items()}
 
-SI_SMALL = range(-30, 0, 3)
-SI_LARGE = range(3, 33, 3)
-IEC_RANGE = range(10, 90, 10)
-
 SPEC_FIELDS = ('fill', 'align', 'sign', 'alt', 'zero', 'width', 'grouping')
+
+# Use OrderedDict for older versions of Python
+if sys.version_info[:2] < (3, 7):  # pragma: no cover
+    from collections import OrderedDict
+    SI_SMALL = OrderedDict(sorted(SI_SMALL.items()))
+    SI_LARGE = OrderedDict(sorted(SI_LARGE.items()))
+    IEC_PREFIXES = OrderedDict(sorted(IEC_PREFIXES.items()))
 
 
 def raise_from_none(exc):  # pragma: no cover
@@ -119,21 +125,18 @@ def _convert(value, spec):
     absolute_value = abs(value)
 
     if spec['type'] in 'hH':
-        base, prefixes = 10, SI_PREFIXES
-        span = SI_LARGE if absolute_value >= 1.0 else SI_SMALL
+        prefixes = SI_LARGE if absolute_value >= 1.0 else SI_SMALL
+
     else:
-        base, prefixes = 2, IEC_PREFIXES
-        span = IEC_RANGE if absolute_value >= 1.0 else tuple()
+        prefixes = IEC_PREFIXES if absolute_value >= 1.0 else {}
 
     margin = 1.0 if spec['margin'] is None else (100.0 + float(spec['margin'])) / 100.0
 
-    if span is SI_SMALL and 0 < absolute_value < SI_SMALLEST * margin:
+    if prefixes is SI_SMALL and 0 < absolute_value < SI_SMALLEST * margin:
         magnitude = SI_SMALLEST
     else:
         magnitude = 0
-        for exp in span:
-            next_mag = base**exp
-            # Use floor division rather than comparison for float variance
+        for next_mag in prefixes:
             if absolute_value // (next_mag * margin):
                 magnitude = next_mag
             else:
