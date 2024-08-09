@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2020 - 2023 Avram Lubkin, All Rights Reserved
+# Copyright 2020 - 2024 Avram Lubkin, All Rights Reserved
 
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -131,16 +131,19 @@ def _convert(value, spec):
         prefixes = IEC_PREFIXES if absolute_value >= 1.0 else {}
 
     margin = 1.0 if spec['margin'] is None else (100.0 + float(spec['margin'])) / 100.0
+    precision = int(spec['precision']) if spec['precision'] else 6
 
     if prefixes is SI_SMALL and 0 < absolute_value < SI_SMALLEST * margin:
         magnitude = SI_SMALLEST
     else:
         magnitude = 0
-        for next_mag in prefixes:
-            if absolute_value // (next_mag * margin):
-                magnitude = next_mag
-            else:
-                break
+
+    for next_mag in prefixes:
+        # Round here to avoid cases like 1000K
+        if int(round(absolute_value / (next_mag * margin), precision)):
+            magnitude = next_mag
+        else:
+            break
 
     if magnitude:
         value /= magnitude

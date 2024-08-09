@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2020 - 2023 Avram Lubkin, All Rights Reserved
+# Copyright 2020 - 2024 Avram Lubkin, All Rights Reserved
 
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -454,11 +454,24 @@ class TestFloatFormatting(unittest.TestCase):
         self.assertEqual(format(Float(950), '.2h'), '950.00')
         self.assertEqual(format(Float(950), '%-5.2h'), '0.95k')
         self.assertEqual(format(Float(1000), '%-5.2h'), '1.00k')
-        self.assertEqual(format(Float(949.9), '%-5.2h'), '949.90')
+        self.assertEqual(format(Float(949.9), '%-5.2h'), '0.95k')
+        self.assertEqual(format(Float(949.9), '%-5.4h'), '949.9000')
 
         self.assertEqual(format(Float(1000), '%5.2h'), '1000.00')
-        self.assertEqual(format(Float(1049), '%5.2h'), '1049.00')
+        self.assertEqual(format(Float(1049), '%5.2h'), '1.05k')
+        self.assertEqual(format(Float(1049), '%5.3h'), '1049.000')
         self.assertEqual(format(Float(1050), '%5.2h'), '1.05k')
+
+    def test_rounding(self):
+        """
+        Magnitude accounts for rounding
+        """
+
+        self.assertEqual(format(Float(10e-10), '.2h'), '1.00n')
+        self.assertEqual(format(Float(9.9999e-10), '.2h'), '1.00n')
+        self.assertEqual(format(Float(10e10), '.2h'), '100.00G')
+        self.assertEqual(format(Float(9.9999e10), '.2h'), '100.00G')
+        self.assertEqual(format(Float(9.999e10), '.2h'), '99.99G')
 
     def test_deprecated(self):
         """
