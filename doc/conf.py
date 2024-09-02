@@ -18,7 +18,7 @@ from setup_helpers import get_version  # noqa: E402
 # -- Project information -----------------------------------------------------
 
 project = 'Prefixed'
-copyright = '2023, Avram Lubkin'
+copyright = '2024, Avram Lubkin'
 author = 'Avram Lubkin'
 
 # The full version, including alpha/beta/rc tags

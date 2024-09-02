@@ -226,6 +226,12 @@ SI (Decimal) Prefixes
 |   q    | Quecto | |10^-30| |
 +--------+--------+----------+
 
+.. note::
+  Prefixed uses the lowercase Greek letter mu ('μ'), U+03BC, to represent the Micro
+  prefix, but will accept input using the Micro sign ('µ'), U+00B5. This complies
+  with the preference defined in `Unicode Technical Report #25`_ section 2.5.
+
+
 IEC (Binary) Prefixes
 ^^^^^^^^^^^^^^^^^^^^^
 
@@ -249,6 +255,7 @@ IEC (Binary) Prefixes
 |   K    | Kibi | |2^10| |
 +--------+------+--------+
 
+.. _Unicode Technical Report #25: https://www.unicode.org/reports/tr25
 .. _SI (decimal): https://en.wikipedia.org/wiki/Metric_prefix
 .. _IEC (binary): https://en.wikipedia.org/wiki/Binary_prefix
 .. _float: https://docs.python.org/3/library/functions.html#float

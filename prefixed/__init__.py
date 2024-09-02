@@ -46,8 +46,13 @@ RE_FORMAT_SPEC = re.compile(
     # spec_type: Single non-numeric character
     r'(?P<type>\D)?$'
 )
+
+# pylint: disable-next=wrong-spelling-in-comment
+# \xce\xbc and \xc2\xb5 included for micro for Python 2.7 strings
+# Support for both Greek letter mu and legacy micro symbol
 RE_PREFIX = re.compile(
-    r'(?P<value>[-+]?\d+\.?(?:\d+)?(?:[eE]?\d)?) ?(?P<prefix>(?:[a-zA-Z\u03bc]|\xce\xbc)i?)$'
+    r'(?P<value>[-+]?\d+\.?(?:\d+)?(?:[eE]?\d)?) ?'
+    r'(?P<prefix>(?:[a-zA-Z\u03bc\u00B5]|\xce\xbc|\xc2\xb5)i?)$'
 )
 
 SI_SMALL = {
@@ -272,6 +277,8 @@ class Float(float):
                 prefix = match.group('prefix')
                 if prefix[-1] == 'i':
                     magnitude = IEC_MAGNITUDE.get(prefix[0])
+                elif prefix in {'µ', u'µ'}:  # pylint: disable=duplicate-value  # Python 2.7
+                    magnitude = SI_MAGNITUDE.get('μ')
                 else:
                     magnitude = SI_MAGNITUDE.get(prefix)
 

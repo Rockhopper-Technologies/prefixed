@@ -1,5 +1,5 @@
 ..
-  Copyright 2020 - 2022 Avram Lubkin, All Rights Reserved
+  Copyright 2020 - 2024 Avram Lubkin, All Rights Reserved
 
   This Source Code Form is subject to the terms of the Mozilla Public
   License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -57,6 +57,12 @@ SI (Decimal) Prefixes
 |   q    | Quecto | |10^-30| |
 +--------+--------+----------+
 
+.. note::
+  Prefixed uses the lowercase Greek letter mu ('μ'), U+03BC, to represent the Micro
+  prefix, but will accept input using the Micro sign ('µ'), U+00B5. This complies
+  with the preference defined in `Unicode Technical Report #25`_ section 2.5.
+
+
 IEC (Binary) Prefixes
 ^^^^^^^^^^^^^^^^^^^^^
 
@@ -79,6 +85,8 @@ IEC (Binary) Prefixes
 +--------+------+--------+
 |   K    | Kibi | |2^10| |
 +--------+------+--------+
+
+.. _Unicode Technical Report #25: https://www.unicode.org/reports/tr25
 
 .. |10^30| replace:: 10\ :sup:`30`\
 .. |10^27| replace:: 10\ :sup:`27`\

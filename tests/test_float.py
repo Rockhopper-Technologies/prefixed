@@ -39,8 +39,7 @@ class TestFloat(unittest.TestCase):
         self.assertEqual(str(Float(1.0)), '1.0')
 
 
-# pylint: disable=expression-not-assigned
-class TestFloatFormatting(unittest.TestCase):
+class TestFloatFormatting(unittest.TestCase):  # pylint: disable=too-many-public-methods
     """
     Tests for prefixed.Float input and output
     """
@@ -261,7 +260,7 @@ class TestFloatFormatting(unittest.TestCase):
 
     def test_input_output_si_small(self):
         """
-        Large (>1) numbers input matches output
+        Small (<1) numbers input matches output
         """
 
         for num in ('100.00m', '10.00m', '1.00m',
@@ -317,7 +316,18 @@ class TestFloatFormatting(unittest.TestCase):
             self.assertEqual(format(Float('+' + num), '.2k'), num)
             self.assertEqual(format(Float('+' + num), '.2m'), short_form)
 
-    def test_unicode(self):
+    def test_micro(self):
+        """
+        Micro and mu are both valid for input
+        """
+
+        micro = '100.01µ'
+        mu = '100.01μ'
+
+        self.assertEqual(format(Float(mu), '.2h'), mu)
+        self.assertEqual(format(Float(micro), '.2h'), mu)
+
+    def test_unicode_iec(self):
         """
         For Python 2, test Unicode strings behave the same
         """
@@ -486,6 +496,7 @@ class TestFloatFormatting(unittest.TestCase):
         self.assertEqual(format(Float(2048), u'.2J'), '2.00K')
 
 
+# pylint: disable=expression-not-assigned
 class TestFloatMath(unittest.TestCase):
     """
     Tests for prefixed.Float math
